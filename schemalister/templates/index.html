@@ -59,17 +59,11 @@
 						</td>
 						<td>
 							<select id="id_api_version" name="api_version">
+								<option value="32">32.0</option>
 								<option value="31">31.0</option>
 								<option value="30">30.0</option>
 								<option value="29">29.0</option>
 								<option value="28">28.0</option>
-								<option value="27">27.0</option>
-								<option value="26">26.0</option>
-								<option value="25">25.0</option>
-								<option value="24">24.0</option>
-								<option value="23">23.0</option>
-								<option value="22">22.0</option>
-								<option value="21">21.0</option>
 							</select>
 						</td>
 					</tr>
@@ -88,7 +82,7 @@
 
 				<div class="loading">
 					<div style="float:left;">
-						<img src="/static/images/loading.gif" alt="Loading" title="Loading" />
+						<img src="{{ STATIC_URL }}images/loading.gif" alt="Loading" title="Loading" />
 					</div>
 					<div style="float:left;margin-left:20px;">
 						<h1 style="font-size:1.5em;margin-top:20px;">Accessing Salesforce...</h1>
