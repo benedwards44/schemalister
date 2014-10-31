@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	
+	<h1>Salesforce Schema Lister</h1>
+	<p>
+		See the objects and fields printed below for Org Id: <i>{{ schema.org_id }}</i>
+	</p>
+
+	{% for object in schema.sorted_objects %}
+
+		<h2>{{ object.label }} ({{ object.api_name }})</h2>
+
+		<table class="table table-hover">
+
+			<thead>
+				<tr>
+					<th width="30%">Field Label</th>
+					<th width="30%">API Name</th>
+					<th width="30%">Type</th>
+				</tr>
+			</thead>
+
+			<tbody>
+
+			{% for field in object.sorted_fields %}
+
+				<tr>
+					<td>{{ field.label }}</td>
+					<td>{{ field.api_name }}</td>
+					<td>{{ field.data_type|linebreaks }}</td>
+				</tr>
+
+			{% endfor %}
+
+			</tbody>
+
+		</table>
+
+		<br/>
+
+	{% endfor %}
+
+{% endblock %}
