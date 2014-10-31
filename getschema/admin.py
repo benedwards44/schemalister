@@ -1,5 +1,5 @@
 from django.contrib import admin
-from schemalister.models import Schema, Object, Field, Debug
+from getschema.models import Schema, Object, Field, Debug
 
 class FieldInline(admin.TabularInline):
 	fields = ['label','api_name','data_type']
