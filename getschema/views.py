@@ -96,10 +96,8 @@ def oauth_response(request):
 			if 'get_schema' in request.POST:
 
 				# instantiate the metadata WSDL
-				#metadata_client = Client('file:///home/ben/sites/sfschemalist/schemalister/metadata32.wsdl.xml')
-				partner_client = Client('file:///home/ben/sites/sfschemalist/schemalister/partner32.wsdl.xml')
+				partner_client = Client('http://schemalister.herokuapp.com/static/partner32.wsdl.xml')
 
-				#metadata_url = instance_url + '/services/Soap/m/' + str(api_version) + '.0/' + org_id
 				partner_url = instance_url + '/services/Soap/u/' + str(api_version) + '.0/' + org_id
 
 				# set the metadata url based on the login result
