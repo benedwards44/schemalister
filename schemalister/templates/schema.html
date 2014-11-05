@@ -9,11 +9,21 @@
 {% endblock %}
 
 {% block content %}
-	
+
+	<script>
+		$(document).ready(funciton() 
+		{
+			$.ajax({
+			    url: '/delete_schema/{{ schema.id }}',
+			    type: 'post'
+			});
+		})
+	</script>
+
 	<h1>Salesforce Schema Lister</h1>
 	<p>
-		See the objects and fields printed below for the Org {{ schema.org_name }} ({{ schema.org_id }}) <br/>
-		Note: Schemas are deleted from the database hourly, so not to store your personal Org information.
+		See the objects and fields printed below for the Org {{ schema.org_name }} ({{ schema.org_id }}) <br/><br/>
+		Note: Your actual org schema has been deleted on loading this page. Refreshing this page will error. This is to ensure none of your Org data is captured.
 	</p>
 
 	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">

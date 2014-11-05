@@ -12,4 +12,5 @@ urlpatterns = patterns('',
     url(r'^django-rq/', include('django_rq.urls')),
     url(r'^job_status/(?P<job_id>[-\w]+)/$', 'getschema.views.job_status'),
     url(r'^loading/(?P<job_id>[-\w]+)/$', 'getschema.views.loading'),
+    url(r'^delete_schema/(?P<schema_id>\d+)/$', 'getschema.views.delete_schema', name='delete_schema'),
 )

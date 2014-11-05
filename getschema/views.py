@@ -159,6 +159,16 @@ def view_schema(request, schema_id):
 
 	return render_to_response('schema.html', RequestContext(request,{'schema': schema}))
 
+def delete_schema(request, schema_id):
+
+	try:
+		schema = Schema.objects.get(pk = schema_id)
+		schema.delete()
+	except:
+		pass
+
+	return HttpResponse('Record delete')
+
 def logout(request):
 
 	# Determine logout url based on environment
