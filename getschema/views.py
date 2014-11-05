@@ -200,7 +200,7 @@ def oauth_response(request):
 
 							# everything else	
 							else:
-								field['type'].title()
+								new_field.data_type = field['type'].title()
 
 							new_field.save()
 
