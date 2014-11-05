@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'getschema',
+    'django_rq',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -59,14 +60,19 @@ WSGI_APPLICATION = 'schemalister.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
+import dj_database_url
 
 DATABASES = {
-    'default': {}
+    'default': dj_database_url.config()
 }
 
-# Parse database configuration from $DATABASE_URL
-import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
+RQ_QUEUES = {
+    'default': {
+        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379'), # If you're on Heroku
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 1000
+    }
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/

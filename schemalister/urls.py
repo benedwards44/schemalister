@@ -9,4 +9,5 @@ urlpatterns = patterns('',
     url(r'^schema/(?P<schema_id>\d+)/$', 'getschema.views.view_schema', name='view_schema'),
     url(r'^logout/$', 'getschema.views.logout', name='logout'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^django-rq/', include('django_rq.urls')),
 )
