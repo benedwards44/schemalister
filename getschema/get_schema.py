@@ -9,11 +9,6 @@ def get_objects_and_fields(instance_url, api_version, org_id, access_token):
 	schema.org_id = org_id
 	schema.api_version = str(api_version) + '.0'
 
-	# get username of the authenticated user
-	r = requests.get(instance_url + '/services/data/v' + str(api_version) + '.0/sobjects/User/' + user_id + '?fields=Username', headers={'Authorization': 'OAuth ' + access_token})
-	query_response = json.loads(r.text)
-	schema.username = query_response['Username']
-
 	# get the org name of the authenticated user
 	r = requests.get(instance_url + '/services/data/v' + str(api_version) + '.0/sobjects/Organization/' + org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + access_token})
 	schema.org_name = json.loads(r.text)['Name']
