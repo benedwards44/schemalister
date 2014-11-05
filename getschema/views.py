@@ -4,7 +4,6 @@ from django.http import HttpResponseRedirect
 from getschema.models import Schema, Object, Field, Debug
 from getschema.forms import LoginForm
 from django.conf import settings
-from suds.client import Client
 import json	
 import requests
 
@@ -95,25 +94,13 @@ def oauth_response(request):
 
 			if 'get_schema' in request.POST:
 
-				# instantiate the metadata WSDL
-				partner_client = Client('http://schemalister.herokuapp.com/static/partner32.wsdl.xml')
-
-				partner_url = instance_url + '/services/Soap/u/' + str(api_version) + '.0/' + org_id
-
-				# set the metadata url based on the login result
-				partner_client.set_options(location = partner_url)
-
-				# set the session id from the login result
-				session_header = partner_client.factory.create("SessionHeader")
-				session_header.sessionId = access_token
-				partner_client.set_options(soapheaders = session_header)
-				
 				# create the schema record to store results
 				schema = Schema()
 				schema.org_id = org_id
 				schema.api_version = str(api_version) + '.0'
 				schema.save()
 
+				# List of standard objects to include
 				standard_objects = (
 					'Account',
 					'AccountContactRole',
@@ -150,83 +137,45 @@ def oauth_response(request):
 					'User',
 				)
 
-				object_list = []
-				loop_counter = 0
+				# Describe all sObjects
+				all_objects = requests.get(
+					instance_url + 'services/data/v' + api_version _ '.0/sobjects/',
+					headers={
+						'Authorization': 'Bearer ' + access_token, 
+						'content-type': 'application/json'
+					}
+				)
 
-				sf_object_list = partner_client.service.describeGlobal().sobjects
+				for sObject in all_objects.json()['sobjects']:
 
-				# Build list of objects
-				for sf_object in sf_object_list:
+					if sObject['name'] in standard_objects or sObject['name'].endswith('__c'):
 
-					# only add standard objects listed or custom objects
-					if sf_object.name in standard_objects or sf_object.name.endswith('__c'):
-						object_list.append(sf_object.name)
+						# Create object record
+						new_object = Object()
+						new_object.schema = schema
+						new_object.api_name = sObject['name']
+						new_object.label = sObject['label']
+						new_object.save()
 
-					# Can only query 10 objects at a time
-					if len(object_list) == 100 or (len(sf_object_list) - loop_counter) <= 100:
+						# query for fields in the object
+						all_fields = requests.get(
+							instance_url + sObject['urls']['describe'],
+							headers={
+								'Authorization': 'Bearer ' + access_token, 
+								'content-type': 'application/json'
+								}
+						)
 
-						for object in partner_client.service.describeSObjects(object_list):
+						# Loop through fields
+						for field in all_fields.json()['fields']:
 
-							new_object = Object()
-							new_object.schema = schema
-							new_object.api_name = object.name
-							try:
-								new_object.label = object.label
-							# skip record if no label
-							except:
-								continue
-
-							new_object.save()
-
-							try:
-
-								for field in object.fields:
-
-									new_field = Field()
-									new_field.object = new_object
-									new_field.api_name = field.name
-
-									try:
-										new_field.label = field.label
-									except:
-										new_field.label = field.name
-									
-									try:
-
-										new_field.data_type = field.type.title()
-
-										if new_field.data_type == 'Picklist' or new_field.data_type == 'Multipicklist':
-
-											new_field.data_type = new_field.data_type + ' ('
-
-											for picklist_value in field.picklistValues:
-												new_field.data_type = new_field.data_type + picklist_value.label + ', '
-
-											new_field.data_type = new_field.data_type[:-2]
-											new_field.data_type = new_field.data_type + ')'
-
-										elif new_field.data_type == 'Reference':
-
-											new_field.data_type = 'Lookup ('
-
-											for reference_to in field.referenceTo:
-												new_field.data_type = new_field.data_type + reference_to + ', '
-
-											new_field.data_type = new_field.data_type[:-2]
-											new_field.data_type = new_field.data_type + ')'
-
-									except:
-										pass
-
-									new_field.save()
-
-							# object with no fields - may as well delete
-							except:
-								new_object.delete()
-
-						object_list = []
-
-					loop_counter = loop_counter + 1
+							# Create field
+							new_field = Field()
+							new_field.object = new_object
+							new_field.api_name = field['name']
+							new_field.label = field['label']
+							new_field.data_type = field['type']
+							new_field.save()
 
 				return HttpResponseRedirect('/schema/' + str(schema.id))
 
