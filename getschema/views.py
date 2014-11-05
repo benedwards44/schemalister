@@ -63,9 +63,15 @@ def oauth_response(request):
 			user_id = auth_response['id'][-18:]
 			org_id = auth_response['id'][:-19]
 			org_id = org_id[-18:]
+
+			# get username of the authenticated user
 			r = requests.get(instance_url + '/services/data/v' + api_version + '.0/sobjects/User/' + user_id + '?fields=Username', headers={'Authorization': 'OAuth ' + access_token})
 			query_response = json.loads(r.text)
 			username = query_response['Username']
+
+			# get the org name of the authenticated user
+			r = requests.get(instance_url + '/services/data/v' + api_version + '.0/sobjects/Organization/' + org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + access_token})
+			org_name = json.loads(r.text)['Name']
 
 		login_form = LoginForm(initial={'environment': environment, 'api_version': api_version, 'access_token': access_token, 'instance_url': instance_url, 'org_id': org_id})	
 
@@ -199,7 +205,7 @@ def oauth_response(request):
 
 				return HttpResponseRedirect('/schema/' + str(schema.id))
 
-	return render_to_response('oauth_response.html', RequestContext(request,{'error': error_exists, 'error_message': error_message, 'username': username, 'login_form': login_form}))
+	return render_to_response('oauth_response.html', RequestContext(request,{'error': error_exists, 'error_message': error_message, 'username': username, 'org_name': org_name, 'login_form': login_form}))
 
 def view_schema(request, schema_id):
 
