@@ -13,9 +13,11 @@
 
 	<hr />
 
-	<h3>Jump to object:</h3> <br/>
+	<h4>Jump to object:</h4>
 	{% for object in schema.sorted_objects %} 
-		<a href="#{{ object.api_name }}" class="object_link">{{ object.label }}</a> | 
+		<div class="object_link">
+			<a href="#{{ object.api_name }}">{{ object.label }}</a> | 
+		</div>
 	{% endfor %}
 
 	<hr />
