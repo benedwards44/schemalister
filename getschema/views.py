@@ -138,7 +138,13 @@ def oauth_response(request):
 				)
 
 				# Describe all sObjects
-				all_objects = requests.get(instance_url + 'services/data/v' + api_version + '.0/sobjects/', headers={'Authorization': 'Bearer ' + access_token, 'content-type': 'application/json'})
+				all_objects = requests.get(
+					instance_url + 'services/data/v' + str(api_version) + '.0/sobjects/', 
+					headers={
+						'Authorization': 'Bearer ' + access_token, 
+						'content-type': 'application/json'
+					}
+				)
 
 				for sObject in all_objects.json()['sobjects']:
 
