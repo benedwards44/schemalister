@@ -54,7 +54,7 @@ def get_objects_and_fields(instance_url, api_version, org_id, access_token):
 		}
 	)
 
-	for sObject in objects.json()['sobjects']:
+	for sObject in all_objects.json()['sobjects']:
 
 		if sObject['name'] in standard_objects or sObject['name'].endswith('__c'):
 
