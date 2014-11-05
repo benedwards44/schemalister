@@ -138,7 +138,13 @@ def oauth_response(request):
 				)
 
 				# Describe all sObjects
-				all_objects = requests.get(instance_url + '/services/data/v' + api_version _ '.0/sobjects/', headers={ 'Authorization': 'Bearer ' + access_token, 'content-type': 'application/json'})
+				all_objects = requests.get(
+					instance_url + 'services/data/v' + api_version + '.0/sobjects/',
+					headers={
+						'Authorization': 'Bearer ' + access_token, 
+						'content-type': 'application/json'
+					}
+				)
 
 				for sObject in all_objects.json()['sobjects']:
 
@@ -152,7 +158,13 @@ def oauth_response(request):
 						new_object.save()
 
 						# query for fields in the object
-						all_fields = requests.get(instance_url + sObject['urls']['describe'], headers={'Authorization': 'Bearer ' + access_token, 'content-type': 'application/json'})
+						all_fields = requests.get(
+							instance_url + sObject['urls']['describe'],
+							headers={
+								'Authorization': 'Bearer ' + access_token, 
+								'content-type': 'application/json'
+								}
+						)
 
 						# Loop through fields
 						for field in all_fields.json()['fields']:
