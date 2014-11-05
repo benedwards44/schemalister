@@ -2,20 +2,24 @@
 
 {% block content %}
 
-	<h1>Salesforce Schema Lister</h1>
-	<p>
-		This tool uses the Salesforce Metadata API to build a list of objects, fields and field attributes from within your Salesforce Org.
-	</p>
-				
-	<div class="loading-components">
+	<div class="inner">
 
-		<div style="float:left;">
-			<img src="{{ STATIC_URL }}images/loading.gif" alt="Loading" title="Loading" />
-		</div>
+		<h1>Salesforce Schema Lister</h1>
+		<p>
+			This tool uses the Salesforce Metadata API to build a list of objects, fields and field attributes from within your Salesforce Org.
+		</p>
+					
+		<div class="loading-components">
 
-		<div style="float:left;margin-left:20px;">
-			<h1 style="font-size:1.5em;margin-top:20px;">Querying components...</h1>
-			<p>This can take a few minutes.</p>
+			<div style="float:left;">
+				<img src="{{ STATIC_URL }}images/loading.gif" alt="Loading" title="Loading" />
+			</div>
+
+			<div style="float:left;margin-left:20px;">
+				<h1 style="font-size:1.5em;margin-top:20px;">Querying objects and fields...</h1>
+				<p>This can take a few minutes.</p>
+			</div>
+
 		</div>
 
 	</div>
