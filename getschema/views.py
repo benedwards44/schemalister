@@ -107,7 +107,7 @@ def oauth_response(request):
 			if 'get_schema' in request.POST:
 
 				# Queue job to run async
-				job = django_rq.enqueue(get_objects_and_fields, instance_url, api_version, org_id, access_token, username, org_name)
+				job = django_rq.enqueue(get_objects_and_fields, instance_url, api_version, org_id, access_token)
 
 				return HttpResponseRedirect('/loading/' + str(job.id))
 
