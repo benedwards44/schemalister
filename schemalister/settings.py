@@ -77,7 +77,7 @@ RQ_QUEUES = {
 CACHES = {
     'default': {
         'BACKEND': 'redis_cache.cache.RedisCache',
-        'LOCATION': '127.0.0.1:6379:1',
+        'LOCATION': 'redis://localhost:6379',
         'OPTIONS': {
             'CONNECTION_POOL_KWARGS': {'max_connections': 100}
         }
