@@ -139,7 +139,7 @@ def oauth_response(request):
 
 				# Describe all sObjects
 				all_objects = requests.get(
-					instance_url + 'services/data/v' + str(api_version) + '.0/sobjects/', 
+					instance_url + '/services/data/v' + str(api_version) + '.0/sobjects/', 
 					headers={
 						'Authorization': 'Bearer ' + access_token, 
 						'content-type': 'application/json'
