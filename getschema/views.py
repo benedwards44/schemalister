@@ -167,7 +167,7 @@ def delete_schema(request, schema_id):
 	except:
 		pass
 
-	return HttpResponse('Record delete')
+	return HttpResponse('Record deleted')
 
 def logout(request):
 
