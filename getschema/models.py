@@ -18,8 +18,8 @@ class Object(models.Model):
 class Field(models.Model):
 	object = models.ForeignKey(Object)
 	label = models.CharField(max_length=255)
-	api_name = models.CharField(max_length=255)
-	data_type = models.CharField(max_length=255)
+	api_name = models.TextField(max_length=255)
+	data_type = models.TextField()
 
 class Debug(models.Model):
 	debug = models.TextField()
