@@ -144,8 +144,8 @@ def view_schema(request, schema_id):
 	# Pass the schema to the page but delete it after view - it's not nice to store Orgs data models
 	schema = get_object_or_404(Schema, pk=schema_id)
 
-	schema_for_delete = get_object_or_404(Schema, pk=schema_id)
-	schema_for_delete.delete()
+	#schema_for_delete = get_object_or_404(Schema, pk=schema_id)
+	#schema_for_delete.delete()
 
 	return render_to_response('schema.html', RequestContext(request,{'schema': schema}))
 
