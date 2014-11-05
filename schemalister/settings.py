@@ -74,6 +74,19 @@ RQ_QUEUES = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.cache.RedisCache',
+        'LOCATION': '127.0.0.1:6379:1',
+        'OPTIONS': {
+            'CONNECTION_POOL_KWARGS': {'max_connections': 100}
+        }
+    }
+}
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'default'
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
