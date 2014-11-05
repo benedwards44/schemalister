@@ -169,7 +169,15 @@ def oauth_response(request):
 
 							# lookup field
 							if field['type'] == 'reference':
-								new_field.data_type = 'Lookup (' + field['referenceTo'].title() + ')'
+								new_field.data_type = 'Lookup ('
+
+								# Could be a list of reference objects
+								for referenceObject in field['referenceTo']:
+									new_field.data_type = new_field.data_type + referenceObject.title() + ', '
+
+								# remove trailing comma and add closing bracket
+								new_field.data_type = new_field.data_type[:-2]
+								new_field.data_type = new_field.data_type + ')'
 
 							# picklist values
 							elif field['type'] == 'picklist' or field['type'] == 'multipicklist':
