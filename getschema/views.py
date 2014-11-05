@@ -130,8 +130,6 @@ def oauth_response(request):
 					'Product2',
 					'Quote',
 					'QuoteLineItem',
-					'Site',
-					'SocialPersona',
 					'Solution',
 					'Task',
 					'User',
