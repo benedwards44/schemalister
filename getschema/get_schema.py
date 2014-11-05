@@ -2,18 +2,14 @@ from getschema.models import Schema, Object, Field, Debug
 import json	
 import requests
 
-def get_objects_and_fields(instance_url, api_version, org_id, access_token):
+def get_objects_and_fields(instance_url, api_version, org_id, access_token, username, org_name):
 
 	# create the schema record to store results
 	schema = Schema()
 	schema.org_id = org_id
 	schema.api_version = str(api_version) + '.0'
-
-	# get the org name of the authenticated user
-	r = requests.get(instance_url + '/services/data/v' + api_version + '.0/sobjects/Organization/' + org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + access_token})
-	schema.org_name = json.loads(r.text)['Name']
-
-	# save record
+	schema.org_name = org_name
+	schema.username = username
 	schema.save()
 
 	# List of standard objects to include
