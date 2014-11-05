@@ -166,7 +166,27 @@ def oauth_response(request):
 							new_field.object = new_object
 							new_field.api_name = field['name']
 							new_field.label = field['label']
-							new_field.data_type = field['type']
+
+							# lookup field
+							if field['type'] == 'reference':
+								new_field.data_type = 'Lookup (' + field['referenceTo'].title() + ')'
+
+							# picklist values
+							elif field['type'] == 'picklist' or field['type'] == 'multipicklist':
+								new_field.data_type = field['type'].title() + ' ('
+
+								# Add in picklist values
+								for picklist in field['picklistValues']:
+									new_field.data_type = new_field.data_type + picklist['label'] + ', '
+
+								# remove trailing comma and add closing bracket
+								new_field.data_type = new_field.data_type[:-2]
+								new_field.data_type = new_field.data_type + ')'
+
+							# everything else	
+							else:
+								field['type'].title()
+
 							new_field.save()
 
 				return HttpResponseRedirect('/schema/' + str(schema.id))
