@@ -93,3 +93,12 @@ h2 {
     width: 100%;
     height:20px;
 }
+
+.object_link {
+    color: #999a9b;
+    text-decoration:none;
+}
+
+.object_link a:hover {
+    color: #ff6600;
+}
