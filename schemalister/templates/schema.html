@@ -27,7 +27,7 @@
 	            </h4>
 	        </div>
 
-	        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne" style="height: 0px;">
+	        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
 	            <div class="panel-body">
 	            	{% for object in schema.sorted_objects %} 
                     	<a href="#{{ object.api_name }}" class="object_link">{{ object.label }}</a> <span class="object_link">|</span> 
