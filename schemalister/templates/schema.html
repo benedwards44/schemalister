@@ -11,8 +11,18 @@
 		See the objects and fields printed below for Org Id: <i>{{ schema.org_id }}</i>
 	</p>
 
+	<hr />
+
+	Jump to Object: 
+	{% for object in schema.sorted_objects %} 
+		<a href="#{{ object.api_name }}">{{ object.label }}</a> | 
+	{% endfor %}
+
+	<hr />
+
 	{% for object in schema.sorted_objects %}
 
+		<a name="{{ object.api_name }}"></a>
 		<h2>{{ object.label }} ({{ object.api_name }})</h2>
 
 		<table class="table table-hover">
