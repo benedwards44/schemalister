@@ -2,6 +2,8 @@ from django.db import models
 
 class Schema(models.Model):
 	org_id = models.CharField(max_length=255)
+	org_name = models.CharField(max_length=255)
+	username = models.CharField(max_length=255)
 	api_version = models.CharField(max_length=255)
 
 	def sorted_objects(self):
