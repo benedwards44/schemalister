@@ -10,4 +10,6 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'getschema.views.logout', name='logout'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^django-rq/', include('django_rq.urls')),
+    url(r'^job_status/(?P<job_id>[-\w]+)/$', 'getschema.views.job_status'),
+    url(r'^loading/(?P<job_id>[-\w]+)/$', 'getschema.views.loading'),
 )

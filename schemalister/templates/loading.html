@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<h1>Salesforce Schema Lister</h1>
+	<p>
+		This tool uses the Salesforce Metadata API to build a list of objects, fields and field attributes from within your Salesforce Org.
+	</p>
+				
+	<div class="loading-components">
+
+		<div style="float:left;">
+			<img src="{{ STATIC_URL }}images/loading.gif" alt="Loading" title="Loading" />
+		</div>
+
+		<div style="float:left;margin-left:20px;">
+			<h1 style="font-size:1.5em;margin-top:20px;">Querying components...</h1>
+			<p>This can take a few minutes.</p>
+		</div>
+
+	</div>
+
+	<script>
+ 		window.setInterval(function () 
+ 		{
+       		$.ajax({
+			    url: '/job_status/{{ jobid }}',
+			    type: 'get', //this is the default though, you don't actually need to always mention it
+			    success: function(resp) 
+			    {
+			        if (resp != 'running')
+			        {
+			        	window.location = '/schema/' + resp;
+			        }
+			        // Else do nothing. It will re-run in 5 seconds
+			    },
+			    failure: function(resp) 
+			    { 
+			        alert('The website returned an error trying to run your job. Please try again.');
+			    }
+			});
+    	}, 5000);
+	</script>
+
+{% endblock %}

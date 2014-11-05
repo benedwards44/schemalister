@@ -7,6 +7,10 @@ from django.conf import settings
 from get_schema import get_objects_and_fields
 import json	
 import requests
+import django_rq
+import time
+from rq.exceptions import NoSuchJobError
+from rq.job import Job
 
 def index(request):
 	
@@ -102,18 +106,44 @@ def oauth_response(request):
 
 			if 'get_schema' in request.POST:
 
-				schema_id = get_objects_and_fields(instance_url, api_version, org_id, access_token)
+				# Queue job to run async
+				job = django_rq.enqueue(get_objects_and_fields, instance_url, api_version, org_id, access_token)
 
-				return HttpResponseRedirect('/schema/' + schema_id)
+				return HttpResponseRedirect('/loading/' + str(job.id))
 
 	return render_to_response('oauth_response.html', RequestContext(request,{'error': error_exists, 'error_message': error_message, 'username': username, 'org_name': org_name, 'login_form': login_form}))
+
+# AJAX endpoint for page to constantly check if job is finished
+def job_status(request, job_id):
+
+	# Query for job
+	redis_conn = django_rq.get_connection('default')
+	job = Job.fetch(job_id, connection=redis_conn)
+
+	# If job is finished, return the package id
+	if job.get_status() == 'finished':
+		return HttpResponse(str(job.result))
+	else:
+		return HttpResponse('running')
+
+# Page for user to wait for job to run
+def loading(request, job_id):
+
+	# Query for job
+	redis_conn = django_rq.get_connection('default')
+	job = Job.fetch(job_id, connection=redis_conn)
+
+	# If finished already (unlikely), go to next page
+	if job.get_status() == 'finished':
+		return HttpResponseRedirect('/schema/' + str(job.result))
+	else:
+		return render_to_response('loading.html', RequestContext(request, {'jobid':job_id}))
 
 def view_schema(request, schema_id):
 
 	# Pass the schema to the page but delete it after view - it's not nice to store Orgs data models
 	schema = get_object_or_404(Schema, pk=schema_id)
 	#schema_for_delete = Schema.objects.get(pk=schema_id)
-	#if(fm.elements['Email'].value.indexOf("tquila.com") == -1 && fm.elements['Email'].value.indexOf("salesforce.com") == -1){ArErrMsg['Email']="Please enter a valid email address";}schema_for_delete.delete()
 
 	return render_to_response('schema.html', RequestContext(request,{'schema': schema}))
 
