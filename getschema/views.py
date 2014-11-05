@@ -35,6 +35,7 @@ def oauth_response(request):
 	error_exists = False
 	error_message = ''
 	username = ''
+	org_name = ''
 
 	# On page load
 	if request.GET:
