@@ -11,16 +11,29 @@
 		See the objects and fields printed below for Org Id: <i>{{ schema.org_id }}</i>
 	</p>
 
-	<hr />
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 
-	<h4>Jump to object:</h4>
-	{% for object in schema.sorted_objects %} 
-		<div class="object_link">
-			<a href="#{{ object.api_name }}">{{ object.label }}</a> | 
-		</div>
-	{% endfor %}
+	    <div class="panel panel-default">
 
-	<hr />
+	        <div class="panel-heading" role="tab" id="headingOne">
+	            <h4 class="panel-title">
+	                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+	                    Jump to Object
+	                </a>
+	            </h4>
+	        </div>
+
+	        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+	            <div class="panel-body">
+	                <div class="object_link">
+	                    <a href="#{{ object.api_name }}">{{ object.label }}</a> | 
+	                </div>
+	            </div>
+	        </div>
+
+	    </div>
+
+	</div>
 
 	{% for object in schema.sorted_objects %}
 
