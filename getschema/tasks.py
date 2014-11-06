@@ -1,13 +1,13 @@
 from celery import Celery
+from getschema.models import Schema, Object, Field, Debug
 
 app = Celery('tasks', broker='amqp://wujccfeo:HUmpKc-z8lMHC2lNkE8pK0CP1-ImzAIv@bunny.cloudamqp.com/wujccfeo')
 
 @app.task
 def add(x, y):
-	schema = Schema()
-	schema.org_id = 'abc'
-	schema.org_name = 'abc'
-	schema.save()
+	debug = Debug()
+	debug.debug = 'HELLO'
+	debug.save()
 	return x + y
 
 @app.task
