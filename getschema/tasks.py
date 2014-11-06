@@ -2,7 +2,7 @@ from celery import Celery
 
 app = Celery('tasks', broker='amqp://wujccfeo:HUmpKc-z8lMHC2lNkE8pK0CP1-ImzAIv@bunny.cloudamqp.com/wujccfeo')
 
-@shared_task
+@app.task
 def add(x, y):
 	schema = Schema()
 	schema.org_id = 'abc'
@@ -121,5 +121,8 @@ def get_objects_and_fields(instance_url, api_version, org_id, access_token):
 					new_field.data_type = field['type'].title()
 
 				new_field.save()
+
+	schema.status = 'Finished'
+	schema.save()
 
 	return str(schema.id)
