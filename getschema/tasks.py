@@ -1,8 +1,7 @@
+from getschema.models import Debug
 from celery import Celery
 
 app = Celery('tasks', broker='amqp://wujccfeo:HUmpKc-z8lMHC2lNkE8pK0CP1-ImzAIv@bunny.cloudamqp.com/wujccfeo')
-
-from getschema.models import Debug
 
 @app.task
 def add(x, y):
