@@ -25,6 +25,12 @@
 
 		</div>
 
+		<div class="error" style="display:none;">
+			<p>
+				There was an error processing your request. Please <a href="/">return</a> to the home page and try again.
+			</p>
+		</div>
+
 	</div>
 
 	<script>
@@ -39,13 +45,20 @@
 			        {
 			        	window.location = '/schema/{{ schema.id }}/';
 			        } 
+			        else if (resp == 'Error')
+			        {
+			        	$('.loading-components').hide();
+			        	$('.error').show();
+			        }
+			        // Else job is still running, this will re-run shortly.
 			    },
 			    failure: function(resp) 
 			    { 
-			        alert('The website returned an error trying to run your job. Please try again.');
+			        $('.loading-components').hide();
+		        	$('.error').show();
 			    }
 			});
-    	}, 2000);
+    	}, 3000);
 	</script>
 
 {% endblock %}

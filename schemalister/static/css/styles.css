@@ -103,3 +103,7 @@ h2 {
 a.object_link:hover {
     color: #ff6600;
 }
+
+.error {
+    color: #900;
+}

@@ -58,60 +58,67 @@ def get_objects_and_fields(schema, instance_url, api_version, org_id, access_tok
 		}
 	)
 
-	for sObject in all_objects.json()['sobjects']:
+	try:
 
-		if sObject['name'] in standard_objects or sObject['name'].endswith('__c'):
+		for sObject in all_objects.json()['sobjects']:
 
-			# Create object record
-			new_object = Object()
-			new_object.schema = schema
-			new_object.api_name = sObject['name']
-			new_object.label = sObject['label']
-			new_object.save()
+			if sObject['name'] in standard_objects or sObject['name'].endswith('__c'):
 
-			# query for fields in the object
-			all_fields = requests.get(instance_url + sObject['urls']['describe'], headers={'Authorization': 'Bearer ' + access_token, 'content-type': 'application/json'})
+				# Create object record
+				new_object = Object()
+				new_object.schema = schema
+				new_object.api_name = sObject['name']
+				new_object.label = sObject['label']
+				new_object.save()
 
-			# Loop through fields
-			for field in all_fields.json()['fields']:
+				# query for fields in the object
+				all_fields = requests.get(instance_url + sObject['urls']['describe'], headers={'Authorization': 'Bearer ' + access_token, 'content-type': 'application/json'})
 
-				# Create field
-				new_field = Field()
-				new_field.object = new_object
-				new_field.api_name = field['name']
-				new_field.label = field['label']
+				# Loop through fields
+				for field in all_fields.json()['fields']:
 
-				# lookup field
-				if field['type'] == 'reference':
-					new_field.data_type = 'Lookup ('
+					# Create field
+					new_field = Field()
+					new_field.object = new_object
+					new_field.api_name = field['name']
+					new_field.label = field['label']
 
-					# Could be a list of reference objects
-					for referenceObject in field['referenceTo']:
-						new_field.data_type = new_field.data_type + referenceObject.title() + ', '
+					# lookup field
+					if field['type'] == 'reference':
+						new_field.data_type = 'Lookup ('
 
-					# remove trailing comma and add closing bracket
-					new_field.data_type = new_field.data_type[:-2]
-					new_field.data_type = new_field.data_type + ')'
+						# Could be a list of reference objects
+						for referenceObject in field['referenceTo']:
+							new_field.data_type = new_field.data_type + referenceObject.title() + ', '
 
-				# picklist values
-				elif field['type'] == 'picklist' or field['type'] == 'multipicklist':
-					new_field.data_type = field['type'].title() + ' ('
+						# remove trailing comma and add closing bracket
+						new_field.data_type = new_field.data_type[:-2]
+						new_field.data_type = new_field.data_type + ')'
 
-					# Add in picklist values
-					for picklist in field['picklistValues']:
-						new_field.data_type = new_field.data_type + picklist['label'] + ', '
+					# picklist values
+					elif field['type'] == 'picklist' or field['type'] == 'multipicklist':
+						new_field.data_type = field['type'].title() + ' ('
 
-					# remove trailing comma and add closing bracket
-					new_field.data_type = new_field.data_type[:-2]
-					new_field.data_type = new_field.data_type + ')'
+						# Add in picklist values
+						for picklist in field['picklistValues']:
+							new_field.data_type = new_field.data_type + picklist['label'] + ', '
 
-				# everything else	
-				else:
-					new_field.data_type = field['type'].title()
+						# remove trailing comma and add closing bracket
+						new_field.data_type = new_field.data_type[:-2]
+						new_field.data_type = new_field.data_type + ')'
 
-				new_field.save()
+					# everything else	
+					else:
+						new_field.data_type = field['type'].title()
 
-	schema.status = 'Finished'
+					new_field.save()
+
+		schema.status = 'Finished'
+
+	except Exception as error:
+		schema.status = 'Error'
+		schema.error = error
+	
 	schema.save()
 
 	return str(schema.id)
