@@ -70,7 +70,7 @@ DATABASES = {
 CACHES = {
     'default': {
         'BACKEND': 'redis_cache.cache.RedisCache',
-        'LOCATION': 'localhost:6379:1',
+        'LOCATION': os.getenv('REDISTOGO_URL', 'redis://localhost:6379'),
         'OPTIONS': {
             'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
             'MAX_ENTRIES': 5000,
