@@ -1,12 +1,9 @@
 from celery import Celery
-#from getschema.models import Schema, Object, Field, Debug
+from getschema.models import Schema, Object, Field, Debug
 import json	
-import iron_celery
 import requests
 
-app = Celery('tasks', broker='ironmq://', backend='ironcache://')
-
-@app.task
+@shared_task
 def add(x, y):
 	schema = Schema()
 	schema.org_id = 'abc'
@@ -14,7 +11,6 @@ def add(x, y):
 	schema.save()
 	return x + y
 
-"""
 @app.task
 def get_objects_and_fields(instance_url, api_version, org_id, access_token): 
 
@@ -128,4 +124,3 @@ def get_objects_and_fields(instance_url, api_version, org_id, access_token):
 				new_field.save()
 
 	return str(schema.id)
-"""
