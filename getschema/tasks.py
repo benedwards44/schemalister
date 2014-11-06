@@ -5,7 +5,7 @@ import os
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'schemalister.settings')
 
-app = Celery('tasks', broker=environ.get('REDISTOGO_URL', 'redis://localhost'))
+app = Celery('tasks', broker=os.environ.get('REDISTOGO_URL', 'redis://localhost'))
 
 from getschema.models import Debug
 
