@@ -7,10 +7,6 @@ from django.conf import settings
 from get_schema import get_objects_and_fields
 import json	
 import requests
-import django_rq
-import time
-from rq.exceptions import NoSuchJobError
-from rq.job import Job
 
 def index(request):
 	
@@ -107,7 +103,7 @@ def oauth_response(request):
 			if 'get_schema' in request.POST:
 
 				# Queue job to run async
-				job = django_rq.enqueue(get_objects_and_fields, instance_url, api_version, org_id, access_token)
+				#job = django_rq.enqueue(get_objects_and_fields, instance_url, api_version, org_id, access_token)
 
 				return HttpResponseRedirect('/loading/' + str(job.id))
 
