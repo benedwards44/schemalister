@@ -43,11 +43,11 @@
 			    type: 'get', //this is the default though, you don't actually need to always mention it
 			    success: function(resp) 
 			    {
-			        if (resp.split(':::')[0] == 'Finished')
+			        if (resp.split(':::')[0].trim() == 'Finished')
 			        {
 			        	window.location = '/schema/{{ schema.id }}/';
 			        } 
-			        else if (resp.split(':::')[0] == 'Error')
+			        else if (resp.split(':::')[0].trim() == 'Error')
 			        {
 			        	$('.loading-components').hide();
 			        	$('.error').show();
