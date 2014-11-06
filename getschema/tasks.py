@@ -5,5 +5,8 @@ app = Celery('tasks', broker='ironmq://', backend='ironcache://')
 
 @app.task
 def add(x, y):
-	print 'XXXXXXXXX HELLO'
+	schema = Schema()
+	schema.org_id = 'abc'
+	schema.org_name = 'abc'
+	schema.save()
 	return x + y

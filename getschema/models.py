@@ -2,11 +2,11 @@ from django.db import models
 
 class Schema(models.Model):
 	org_id = models.CharField(max_length=255)
-	org_name = models.CharField(max_length=255)
-	username = models.CharField(max_length=255)
-	api_version = models.CharField(max_length=255)
-	status = models.CharField(max_length=255)
-	error = models.TextField()
+	org_name = models.CharField(max_length=255, null=True)
+	username = models.CharField(max_length=255, null=True)
+	api_version = models.CharField(max_length=255, null=True)
+	status = models.CharField(max_length=255, null=True)
+	error = models.TextField(null=True)
 
 	def sorted_objects(self):
 		return self.object_set.order_by('label')
