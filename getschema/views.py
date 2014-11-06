@@ -7,6 +7,7 @@ from django.conf import settings
 from getschema.tasks import get_objects_and_fields
 import json	
 import requests
+from time import sleep
 
 def index(request):
 	
@@ -111,7 +112,17 @@ def oauth_response(request):
 				schema.save()
 
 				# Queue job to run async
-				get_objects_and_fields.delay(schema, instance_url, api_version, org_id, access_token)
+				try:
+					get_objects_and_fields.delay(schema, instance_url, api_version, org_id, access_token)
+				except:
+					# If fail above, wait 5 seconds and try again. Not ideal but should work for now
+					sleep(5)
+					try:
+						get_objects_and_fields.delay(schema, instance_url, api_version, org_id, access_token)
+					except:
+						# Sleep another 5
+						sleep(5)
+						get_objects_and_fields.delay(schema, instance_url, api_version, org_id, access_token)
 
 				return HttpResponseRedirect('/loading/' + str(schema.id))
 
