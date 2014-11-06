@@ -29,6 +29,9 @@ def index(request):
 	else:
 		login_form = LoginForm()
 
+	from getschema.tasks import add
+	add.delay(1,2)
+
 	return render_to_response('index.html', RequestContext(request,{'login_form': login_form}))
 
 def oauth_response(request):
