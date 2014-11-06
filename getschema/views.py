@@ -131,7 +131,7 @@ def oauth_response(request):
 # AJAX endpoint for page to constantly check if job is finished
 def job_status(request, schema_id):
 	schema = get_object_or_404(Schema, pk=schema_id)
-	return HttpResponse(schema.status + ':' + schema.error)
+	return HttpResponse(schema.status + ':::' + schema.error)
 
 # Page for user to wait for job to run
 def loading(request, schema_id):
