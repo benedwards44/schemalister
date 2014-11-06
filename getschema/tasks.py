@@ -1,7 +1,6 @@
 from celery import Celery
-from getschema.models import Schema, Object, Field, Debug
-import json	
-import requests
+
+app = Celery('tasks', broker='amqp://wujccfeo:HUmpKc-z8lMHC2lNkE8pK0CP1-ImzAIv@bunny.cloudamqp.com/wujccfeo')
 
 @shared_task
 def add(x, y):
