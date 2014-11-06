@@ -1,5 +1,4 @@
 from celery import Celery
-settings.configure()
 
 app = Celery('tasks', broker='amqp://wujccfeo:HUmpKc-z8lMHC2lNkE8pK0CP1-ImzAIv@bunny.cloudamqp.com/wujccfeo')
 
