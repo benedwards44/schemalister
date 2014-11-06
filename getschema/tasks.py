@@ -7,7 +7,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'schemalister.settings')
 
 app = Celery('tasks', broker=os.environ.get('REDISTOGO_URL', 'redis://localhost'))
 
-from getschema.models import Debug
+from getschema.models import Schema, Object, Field, Debug
+import json	
+import requests
 
 @app.task
 def get_objects_and_fields(schema, instance_url, api_version, org_id, access_token): 
