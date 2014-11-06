@@ -68,7 +68,7 @@ DATABASES = {
 }
 
 CACHES = {
-    'redis-cache': {
+    'default': {
         'BACKEND': 'redis_cache.cache.RedisCache',
         'LOCATION': 'localhost:6379:1',
         'OPTIONS': {
@@ -80,7 +80,7 @@ CACHES = {
 
 RQ_QUEUES = {
     'default': {
-        'USE_REDIS_CACHE': 'redis-cache',
+        'USE_REDIS_CACHE': 'default',
     }
 }
 
