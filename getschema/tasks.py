@@ -10,27 +10,7 @@ app = Celery('tasks', broker=os.environ.get('REDISTOGO_URL', 'redis://localhost'
 from getschema.models import Debug
 
 @app.task
-def add(x, y):
-	debug = Debug()
-	debug.debug = 'HELLO'
-	debug.save()
-	return x + y
-
-"""
-@app.task
-def get_objects_and_fields(instance_url, api_version, org_id, access_token): 
-
-	# create the schema record to store results
-	schema = Schema()
-	schema.org_id = org_id
-	schema.api_version = str(api_version) + '.0'
-	schema.status = 'Running'
-
-	# get the org name of the authenticated user
-	r = requests.get(instance_url + '/services/data/v' + str(api_version) + '.0/sobjects/Organization/' + org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + access_token})
-	schema.org_name = json.loads(r.text)['Name']
-
-	schema.save()
+def get_objects_and_fields(schema, instance_url, api_version, org_id, access_token): 
 
 	# List of standard objects to include
 	standard_objects = (
@@ -133,4 +113,3 @@ def get_objects_and_fields(instance_url, api_version, org_id, access_token):
 	schema.save()
 
 	return str(schema.id)
-"""

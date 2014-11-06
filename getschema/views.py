@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from getschema.models import Schema, Object, Field, Debug
 from getschema.forms import LoginForm
 from django.conf import settings
-from get_schema import get_objects_and_fields
+from getschema.tasks import get_objects_and_fields
 import json	
 import requests
 
@@ -102,48 +102,36 @@ def oauth_response(request):
 
 			if 'get_schema' in request.POST:
 
-				# Queue job to run async
-				#job = django_rq.enqueue(get_objects_and_fields, instance_url, api_version, org_id, access_token)
+				# Create schema record
+				schema = Schema()
+				schema.org_id = org_id
+				schema.api_version = str(api_version) + '.0'
+				schema.org_name = org_name
+				schema.status = 'Running'
+				schema.save()
 
-				return HttpResponseRedirect('/loading/' + str(job.id))
+				# Queue job to run async
+				get_objects_and_fields.delay(schema, instance_url, api_version, org_id, access_token)
+
+				return HttpResponseRedirect('/loading/' + str(schema.id))
 
 	return render_to_response('oauth_response.html', RequestContext(request,{'error': error_exists, 'error_message': error_message, 'username': username, 'org_name': org_name, 'login_form': login_form}))
 
 # AJAX endpoint for page to constantly check if job is finished
-def job_status(request, job_id):
-
-	# Query for job
-	try:
-		redis_conn = django_rq.get_connection('default')
-		job = Job.fetch(job_id, connection=redis_conn)
-
-		# If job is finished, return the package id
-		if job.get_status() == 'finished':
-			return HttpResponse(str(job.result))
-	
-	# Sometimes resources are maxed and error returns. If so, pass and job should re-query
-	except: 
-		pass
-	
-	return HttpResponse('running')
+def job_status(request, schema_id):
+	schema = get_object_or_404(Schema, pk=schema_id)
+	return HttpResponse(schema.status)
 
 # Page for user to wait for job to run
-def loading(request, job_id):
+def loading(request, schema_id):
 
-	# Query for job
-	try:
-		redis_conn = django_rq.get_connection('default')
-		job = Job.fetch(job_id, connection=redis_conn)
+	schema = get_object_or_404(Schema, pk=schema_id)
 
-		# If finished already (unlikely), go to next page
-		if job.get_status() == 'finished':
-			return HttpResponseRedirect('/schema/' + str(job.result))
-	
-	# Sometimes resources are maxed and error returns. Load page and let it refresh
-	except: 
-		pass
-
-	return render_to_response('loading.html', RequestContext(request, {'jobid':job_id}))	
+	# If finished already (unlikely) direct to schema view
+	if schema.status == 'Finished':
+		return HttpResponseRedirect('/schema/' + str(schema.id))
+	else:
+		return render_to_response('loading.html', RequestContext(request, {'schema': schema}))	
 
 def view_schema(request, schema_id):
 

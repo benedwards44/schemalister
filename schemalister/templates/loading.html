@@ -31,15 +31,14 @@
  		window.setInterval(function () 
  		{
        		$.ajax({
-			    url: '/job_status/{{ jobid }}',
+			    url: '/job_status/{{ schema.id }}',
 			    type: 'get', //this is the default though, you don't actually need to always mention it
 			    success: function(resp) 
 			    {
-			        if (resp != 'running')
+			        if (resp == 'Finished')
 			        {
-			        	window.location = '/schema/' + resp;
-			        }
-			        // Else do nothing. It will re-run in 5 seconds
+			        	window.location = '/schema/{{ schema.id }}/';
+			        } 
 			    },
 			    failure: function(resp) 
 			    { 
