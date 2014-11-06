@@ -27,7 +27,9 @@
 
 		<div class="error" style="display:none;">
 			<p>
-				There was an error processing your request. Please <a href="/">return</a> to the home page and try again.
+				There was an error processing your request: <i class="error_message"></i>
+				<br/><br/>
+				Please <a href="/">return</a> to the home page and try again.
 			</p>
 		</div>
 
@@ -45,10 +47,11 @@
 			        {
 			        	window.location = '/schema/{{ schema.id }}/';
 			        } 
-			        else if (resp == 'Error')
+			        else if (resp.split(':')[0] == 'Error')
 			        {
 			        	$('.loading-components').hide();
 			        	$('.error').show();
+			        	$('.error_message').text(resp.split(':')[1]);
 			        }
 			        // Else job is still running, this will re-run shortly.
 			    },
@@ -56,6 +59,7 @@
 			    { 
 			        $('.loading-components').hide();
 		        	$('.error').show();
+		        	$('.error_message').text(resp);
 			    }
 			});
     	}, 3000);
