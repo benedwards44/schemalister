@@ -1,12 +1,13 @@
 from __future__ import absolute_import
 from celery import Celery
 from django.conf import settings
-from getschema.models import Debug
 import os
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'schemalister.settings')
 
 app = Celery('tasks', broker='amqp://wujccfeo:HUmpKc-z8lMHC2lNkE8pK0CP1-ImzAIv@bunny.cloudamqp.com/wujccfeo')
+
+from getschema.models import Debug
 
 @app.task
 def add(x, y):
