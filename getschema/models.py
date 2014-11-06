@@ -5,6 +5,8 @@ class Schema(models.Model):
 	org_name = models.CharField(max_length=255)
 	username = models.CharField(max_length=255)
 	api_version = models.CharField(max_length=255)
+	status = models.CharField(max_length=255)
+	error = models.TextField()
 
 	def sorted_objects(self):
 		return self.object_set.order_by('label')

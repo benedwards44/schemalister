@@ -43,7 +43,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'getschema',
-    'django_rq',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -65,23 +64,6 @@ import dj_database_url
 
 DATABASES = {
     'default': dj_database_url.config()
-}
-
-CACHES = {
-    'default': {
-        'BACKEND': 'redis_cache.cache.RedisCache',
-        'LOCATION': os.getenv('REDISTOGO_URL', 'redis://localhost:6379'),
-        'OPTIONS': {
-            'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
-            'MAX_ENTRIES': 5000,
-        },
-    },
-}
-
-RQ_QUEUES = {
-    'default': {
-        'USE_REDIS_CACHE': 'default',
-    }
 }
 
 # Internationalization

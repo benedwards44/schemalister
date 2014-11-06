@@ -9,8 +9,6 @@ requests==2.3.0
 static==1.0.2
 wsgiref==0.1.2
 redis==2.10.3
-rq==0.4.6
 whitenoise==1.0.3
-django-rq==0.7.0
-django-redis==3.5.1
-django-redis-cache==0.13.0
+celery==3.1.0
+iron_celery==0.4.3
