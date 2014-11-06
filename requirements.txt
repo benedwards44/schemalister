@@ -12,4 +12,5 @@ redis==2.10.3
 rq==0.4.6
 whitenoise==1.0.3
 django-rq==0.7.0
+django-redis==3.5.1
 django-redis-cache==0.13.0

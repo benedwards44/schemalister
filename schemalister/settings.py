@@ -67,33 +67,20 @@ DATABASES = {
     'default': dj_database_url.config()
 }
 
-RQ_QUEUES = {
-    'default': {
-        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379'), # If you're on Heroku
-        'DB': 0,
-        'DEFAULT_TIMEOUT': 360
+CACHES = {
+    'redis-cache': {
+        'BACKEND': 'redis_cache.cache.RedisCache',
+        'LOCATION': 'localhost:6379:1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
+            'MAX_ENTRIES': 5000,
+        },
     },
-    'high': {
-        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379'), # If you're on Heroku
-        'DB': 0,
-        'DEFAULT_TIMEOUT': 500,
-    },
-    'low': {
-        'URL': os.getenv('REDISTOGO_URL', 'redis://localhost:6379'), # If you're on Heroku
-        'DB': 0,
-    }
 }
 
-redis_url = urlparse.urlparse(os.environ.get('REDISTOGO_URL', 'redis://localhost:6959'))
-CACHES = {
+RQ_QUEUES = {
     'default': {
-        'BACKEND': 'redis_cache.RedisCache',
-        'LOCATION': '%s:%s' % (redis_url.hostname, redis_url.port),
-        'OPTIONS': {
-            'DB': 0,
-            'PASSWORD': redis_url.password,
-            'CONNECTION_POOL_KWARGS': {'max_connections': 100}
-        }
+        'USE_REDIS_CACHE': 'redis-cache',
     }
 }
 
