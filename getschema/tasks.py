@@ -1,5 +1,5 @@
 from celery import Celery
-from getschema.models import Schema, Object, Field, Debug
+from getschema.models import Debug
 
 app = Celery('tasks', broker='amqp://wujccfeo:HUmpKc-z8lMHC2lNkE8pK0CP1-ImzAIv@bunny.cloudamqp.com/wujccfeo')
 
@@ -10,6 +10,7 @@ def add(x, y):
 	debug.save()
 	return x + y
 
+"""
 @app.task
 def get_objects_and_fields(instance_url, api_version, org_id, access_token): 
 
@@ -126,3 +127,4 @@ def get_objects_and_fields(instance_url, api_version, org_id, access_token):
 	schema.save()
 
 	return str(schema.id)
+"""
