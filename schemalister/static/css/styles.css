@@ -122,4 +122,6 @@ a.object_link:hover {
 
 .back-to-top:hover {    
     background-color: rgba(135, 135, 135, 0.50);
+    color: #ff6600;
+    text-decoration:none;
 }
