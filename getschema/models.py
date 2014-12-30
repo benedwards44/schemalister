@@ -1,6 +1,8 @@
 from django.db import models
 
 class Schema(models.Model):
+	created_date = models.DateTimeField(null=True,blank=True)
+	finished_date = models.DateTimeField(null=True,blank=True)
 	org_id = models.CharField(max_length=255)
 	org_name = models.CharField(max_length=255, blank=True)
 	username = models.CharField(max_length=255, blank=True)

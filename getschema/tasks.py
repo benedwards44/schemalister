@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from celery import Celery
 from django.conf import settings
 import os
+import datetime
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'schemalister.settings')
 
@@ -119,6 +120,7 @@ def get_objects_and_fields(schema, instance_url, api_version, org_id, access_tok
 		schema.status = 'Error'
 		schema.error = error
 	
+	schema.finished_date = datetime.datetime.now()
 	schema.save()
 
 	return str(schema.id)

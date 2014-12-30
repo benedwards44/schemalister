@@ -7,6 +7,7 @@ from django.conf import settings
 from getschema.tasks import get_objects_and_fields
 import json	
 import requests
+import datetime
 from time import sleep
 
 def index(request):
@@ -105,6 +106,7 @@ def oauth_response(request):
 
 				# Create schema record
 				schema = Schema()
+				schema.created_date = datetime.datetime.now()
 				schema.org_id = org_id
 				schema.api_version = str(api_version) + '.0'
 				schema.org_name = org_name
