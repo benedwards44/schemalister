@@ -11,7 +11,7 @@ class Command(NoArgsCommand):
         schemas.delete()
 
         one_day_ago = datetime.datetime.now() - datetime.timedelta(hours=24)
-        schemas = Schema.objects.filter(start_date__lt = one_day_ago)
+        schemas = Schema.objects.filter(created_date__lt = one_day_ago)
         schemas.delete()
 
 
