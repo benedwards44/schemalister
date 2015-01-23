@@ -9,6 +9,7 @@ import json
 import requests
 import datetime
 from time import sleep
+import uuid
 
 def index(request):
 	
@@ -94,18 +95,14 @@ def oauth_response(request):
 
 			if 'logout' in request.POST:
 
-				if 'Production' in environment:
-					login_url = 'https://login.salesforce.com'
-				else:
-					login_url = 'https://test.salesforce.com'
-
 				r = requests.post(login_url + '/services/oauth2/revoke', headers={'content-type':'application/x-www-form-urlencoded'}, data={'token': access_token})
-				return HttpResponseRedirect('/logout?environment=' + environment)
+				return HttpResponseRedirect('/logout?instance_prefix=' + instance_url.replace('https://','').replace('.salesforce.com',''))
 
 			if 'get_schema' in request.POST:
 
 				# Create schema record
 				schema = Schema()
+				schema.random_id = uuid.uuid4()
 				schema.created_date = datetime.datetime.now()
 				schema.org_id = org_id
 				schema.api_version = str(api_version) + '.0'
@@ -126,35 +123,42 @@ def oauth_response(request):
 						sleep(5)
 						get_objects_and_fields.delay(schema, instance_url, api_version, org_id, access_token)
 
-				return HttpResponseRedirect('/loading/' + str(schema.id))
+				return HttpResponseRedirect('/loading/' + str(schema.random_id))
 
 	return render_to_response('oauth_response.html', RequestContext(request,{'error': error_exists, 'error_message': error_message, 'username': username, 'org_name': org_name, 'login_form': login_form}))
 
 # AJAX endpoint for page to constantly check if job is finished
 def job_status(request, schema_id):
-	schema = get_object_or_404(Schema, pk=schema_id)
-	return HttpResponse(schema.status + ':::' + schema.error)
+
+	schema = get_object_or_404(Schema, random_id = schema_id)
+
+	response_data = {
+		'status': schema.status,
+		'error': schema.error
+	}
+
+	return HttpResponse(json.dumps(response_data), content_type = 'application/json')
 
 # Page for user to wait for job to run
 def loading(request, schema_id):
 
-	schema = get_object_or_404(Schema, pk=schema_id)
+	schema = get_object_or_404(Schema, random_id = schema_id)
 
 	# If finished already (unlikely) direct to schema view
 	if schema.status == 'Finished':
-		return HttpResponseRedirect('/schema/' + str(schema.id))
+		return HttpResponseRedirect('/schema/' + str(schema.random_id))
 	else:
 		return render_to_response('loading.html', RequestContext(request, {'schema': schema}))	
 
 def view_schema(request, schema_id):
 	# Pass the schema to the page but delete it after view - it's not nice to store Orgs data models
-	schema = get_object_or_404(Schema, pk=schema_id)
+	schema = get_object_or_404(Schema, random_id = schema_id)
 	return render_to_response('schema.html', RequestContext(request,{'schema': schema}))
 
 def delete_schema(request, schema_id):
 
 	try:
-		schema = Schema.objects.get(pk = schema_id)
+		schema = Schema.objects.get(random_id = schema_id)
 		schema.delete()
 	except:
 		pass
@@ -164,12 +168,7 @@ def delete_schema(request, schema_id):
 def logout(request):
 
 	# Determine logout url based on environment
-	environment = request.GET.get('environment')
-
-	if 'Production' in environment:
-		logout_url = 'https://login.salesforce.com'
-	else:
-		logout_url = 'https://test.salesforce.com'
+	instance_prefix = request.GET.get('instance_prefix')
 		
-	return render_to_response('logout.html', RequestContext(request, {'logout_url': logout_url}))
+	return render_to_response('logout.html', RequestContext(request, {'instance_prefix': instance_prefix}))
 

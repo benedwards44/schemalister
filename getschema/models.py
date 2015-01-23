@@ -1,6 +1,7 @@
 from django.db import models
 
 class Schema(models.Model):
+	random_id = models.CharField(db_index=True,max_length=255, blank=True)
 	created_date = models.DateTimeField(null=True,blank=True)
 	finished_date = models.DateTimeField(null=True,blank=True)
 	org_id = models.CharField(max_length=255)
