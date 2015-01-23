@@ -118,10 +118,12 @@ def oauth_response(request):
 					sleep(5)
 					try:
 						get_objects_and_fields.delay(schema, instance_url, api_version, org_id, access_token)
-					except:
+					except Exception as error:
 						# Sleep another 5
 						sleep(5)
-						get_objects_and_fields.delay(schema, instance_url, api_version, org_id, access_token)
+						schema.status = 'Error'
+						schema.error = error
+						schema.save()
 
 				return HttpResponseRedirect('/loading/' + str(schema.random_id))
 
