@@ -39,7 +39,7 @@
  		window.setInterval(function () 
  		{
        		$.ajax({
-			    url: '/job_status/{{ schema.id }}',
+			    url: '/job_status/{{ schema.random_id }}',
 			    type: 'get', //this is the default though, you don't actually need to always mention it
 			    success: function(resp) 
 			    {
