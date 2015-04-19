@@ -14,7 +14,9 @@
 		
 		<table id="login_table">
 
-			<form action="." method="POST" onsubmit="hideTable();" oncomplete="showTable();" id="loginForm"> {% csrf_token %}
+			<form action="." method="POST" onsubmit="hideTable();" oncomplete="showTable();" id="loginForm"> 
+
+				{% csrf_token %}
 
 				<table class="login_table">
 
@@ -52,21 +54,6 @@
 							<select id="id_environment" name="environment" class="form-control">
 								<option value="Production">Production</option>
 								<option value="Sandbox">Sandbox</option>
-							</select>
-						</td>
-					</tr>
-
-					<tr>
-						<td>
-							<label for="id_api_version">API Version</label>
-						</td>
-						<td>
-							<select id="id_api_version" name="api_version" class="form-control">
-								<option value="32">32.0</option>
-								<option value="31">31.0</option>
-								<option value="30">30.0</option>
-								<option value="29">29.0</option>
-								<option value="28">28.0</option>
 							</select>
 						</td>
 					</tr>

@@ -9,11 +9,12 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'schemalister.settings')
 app = Celery('tasks', broker=os.environ.get('REDISTOGO_URL', 'redis://localhost'))
 
 from getschema.models import Schema, Object, Field, Debug
+from django.conf import settings
 import json	
 import requests
 
 @app.task
-def get_objects_and_fields(schema, instance_url, api_version, org_id, access_token): 
+def get_objects_and_fields(schema, instance_url, org_id, access_token): 
 
 	# List of standard objects to include
 	standard_objects = (
@@ -52,7 +53,7 @@ def get_objects_and_fields(schema, instance_url, api_version, org_id, access_tok
 
 	# Describe all sObjects
 	all_objects = requests.get(
-		instance_url + '/services/data/v' + str(api_version) + '.0/sobjects/', 
+		instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/sobjects/', 
 		headers={
 			'Authorization': 'Bearer ' + access_token, 
 			'content-type': 'application/json'
