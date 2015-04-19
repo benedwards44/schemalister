@@ -108,12 +108,12 @@ def oauth_response(request):
 
 				# Queue job to run async
 				try:
-					get_objects_and_fields.delay(schema, instance_url, str(settings.SALESFORCE_API_VERSION), org_id, access_token)
+					get_objects_and_fields.delay(schema, instance_url, org_id, access_token)
 				except:
 					# If fail above, wait 5 seconds and try again. Not ideal but should work for now
 					sleep(5)
 					try:
-						get_objects_and_fields.delay(schema, instance_url, str(settings.SALESFORCE_API_VERSION), org_id, access_token)
+						get_objects_and_fields.delay(schema, instance_url, org_id, access_token)
 					except Exception as error:
 						# Sleep another 5
 						sleep(5)
