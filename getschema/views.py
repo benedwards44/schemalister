@@ -25,7 +25,7 @@ def index(request):
 			if environment == 'Sandbox':
 				oauth_url = 'https://test.salesforce.com/services/oauth2/authorize'
 
-			oauth_url = oauth_url + '?response_type=code&client_id=' + settings.SALESFORCE_CONSUMER_KEY + '&redirect_uri=' + settings.SALESFORCE_REDIRECT_URI + '&scope=api&state='+ environment
+			oauth_url = oauth_url + '?response_type=code&client_id=' + settings.SALESFORCE_CONSUMER_KEY + '&redirect_uri=' + settings.SALESFORCE_REDIRECT_URI + '&state='+ environment
 			
 			return HttpResponseRedirect(oauth_url)
 	else:
