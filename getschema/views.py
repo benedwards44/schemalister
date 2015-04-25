@@ -61,7 +61,7 @@ def oauth_response(request):
 
 		if 'error_description' in auth_response:
 			error_exists = True
-			error_message = auth_response['error_description']
+			error_message = auth_response['error'] + ' - ' + auth_response['error_description']
 		else:
 			access_token = auth_response['access_token']
 			instance_url = auth_response['instance_url']
