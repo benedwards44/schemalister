@@ -44,7 +44,7 @@ def oauth_response(request):
 	if request.GET:
 
 		oauth_code = request.GET.get('code')
-		environment = request.GET.get('state')[:-2]
+		environment = request.GET.get('state')
 		access_token = ''
 		instance_url = ''
 		org_id = ''
