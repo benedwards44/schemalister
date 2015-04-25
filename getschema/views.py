@@ -25,7 +25,7 @@ def index(request):
 			if environment == 'Sandbox':
 				oauth_url = 'https://test.salesforce.com/services/oauth2/authorize'
 
-			oauth_url = oauth_url + '?response_type=code&client_id=' + settings.SALESFORCE_CONSUMER_KEY + '&redirect_uri=' + settings.SALESFORCE_REDIRECT_URI + '&state='+ environment
+			oauth_url = oauth_url + '?response_type=code&client_id=' + settings.SALESFORCE_CONSUMER_KEY + '&redirect_uri=' + settings.SALESFORCE_REDIRECT_URI + '&scope=api&state='+ environment
 			
 			return HttpResponseRedirect(oauth_url)
 	else:
@@ -56,8 +56,6 @@ def oauth_response(request):
 		
 		r = requests.post(login_url + '/services/oauth2/token', headers={ 'content-type':'application/x-www-form-urlencoded'}, data={'grant_type':'authorization_code','client_id': settings.SALESFORCE_CONSUMER_KEY,'client_secret':settings.SALESFORCE_CONSUMER_SECRET,'redirect_uri': settings.SALESFORCE_REDIRECT_URI,'code': oauth_code})
 		auth_response = json.loads(r.text)
-
-		print auth_response
 
 		if 'error_description' in auth_response:
 			error_exists = True
