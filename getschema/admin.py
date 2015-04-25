@@ -14,7 +14,7 @@ class ObjectInline(admin.TabularInline):
 	extra = 0
 
 class SchemaAdmin(admin.ModelAdmin):
-	list_display = ('org_id','api_version', 'created_date','finished_date','status')
+	list_display = ('org_id','created_date','finished_date','status')
 	inlines = [ObjectInline]
 
 class ObjectAdmin(admin.ModelAdmin):
