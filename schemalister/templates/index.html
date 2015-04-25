@@ -28,20 +28,23 @@
 
 					{% if login_form.errors or login_form.non_field_errors %}
 						<tr>
-							<td colspan="2" style="color:#ff6600;font-weight:bold;">
-								{{ login_form.errors}} <br/>
-								{{ login_form.non_field_errors }}
+							<td colspan="2">
+								<div role="alert" class="alert alert-danger">
+									{{ login_form.errors}} <br/>
+									{{ login_form.non_field_errors }}
+								</div>
 							</td>
 						</tr>
 					{% endif %}
 
 					{% if messages %}
 						<tr>
-							<td colspan="2" style="color:#ff6600;font-weight:bold;">
-							    {% for message in messages %}
-							    	{{ message }}<br/>
-							    {% endfor %}
-							    <br/>
+							<td colspan="2">
+								<div role="alert" class="alert alert-danger">
+								    {% for message in messages %}
+								    	{{ message }}<br/>
+								    {% endfor %}
+							    </div>
 							</td>
 						</tr>
 					{% endif %}
@@ -50,7 +53,7 @@
 						<td width="200">
 							<label for="id_environment">Environment</label>
 						</td>
-						<td>
+						<td width="200">
 							<select id="id_environment" name="environment" class="form-control">
 								<option value="Production">Production</option>
 								<option value="Sandbox">Sandbox</option>
