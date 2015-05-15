@@ -103,6 +103,7 @@ def oauth_response(request):
 				schema.created_date = datetime.datetime.now()
 				schema.org_id = org_id
 				schema.org_name = org_name
+				schema.access_token = access_token
 				schema.status = 'Running'
 				schema.save()
 

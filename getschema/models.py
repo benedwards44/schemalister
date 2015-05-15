@@ -7,6 +7,7 @@ class Schema(models.Model):
 	org_id = models.CharField(max_length=255)
 	org_name = models.CharField(max_length=255, blank=True)
 	username = models.CharField(max_length=255, blank=True)
+	access_token = models.CharField(max_length=255, blank=True)
 	status = models.CharField(max_length=255, blank=True)
 	error = models.TextField(blank=True)
 
