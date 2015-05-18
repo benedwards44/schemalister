@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 from getschema.models import Schema, Object, Field, Debug
 from getschema.forms import LoginForm
 from django.conf import settings
@@ -104,17 +105,18 @@ def oauth_response(request):
 				schema.org_id = org_id
 				schema.org_name = org_name
 				schema.access_token = access_token
+				schema.instance_url = instance_url
 				schema.status = 'Running'
 				schema.save()
 
 				# Queue job to run async
 				try:
-					get_objects_and_fields.delay(schema, instance_url, org_id, access_token)
+					get_objects_and_fields.delay(schema)
 				except:
 					# If fail above, wait 5 seconds and try again. Not ideal but should work for now
 					sleep(5)
 					try:
-						get_objects_and_fields.delay(schema, instance_url, org_id, access_token)
+						get_objects_and_fields.delay(schema)
 					except Exception as error:
 						# Sleep another 5
 						sleep(5)
@@ -171,3 +173,63 @@ def logout(request):
 		
 	return render_to_response('logout.html', RequestContext(request, {'instance_prefix': instance_prefix}))
 
+
+@csrf_exempt
+def auth_details(request):
+	"""
+		RESTful endpoint to pass authentication details
+	"""
+
+	try:
+
+		request_data = json.loads(request.body)
+
+		# Check for all required fields
+		if 'org_id' not in request_data or 'access_token' not in request_data or 'instance_url' not in request_data:
+
+			response_data = {
+				'status': 'Error',
+				'success':  False,
+				'error_text': 'Not all required fields were found in the message. Please ensure org_id, access_token and instance_url are all passed in the payload'
+			}
+
+		# All fields exist. Start job and send response
+		else:
+
+			# create the schema record to store results
+			schema = Schema()
+			schema.random_id = uuid.uuid4()
+			schema.created_date = datetime.datetime.now()
+			schema.org_id = request_data['org_id']
+			schema.org_name = org_name
+			schema.access_token = request_data['access_token']
+			schema.instance_url = request_data['instance_url']
+			schema.status = 'Running'
+
+			# get the org name of the authenticated user
+			r = requests.get(schema.instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/sobjects/Organization/' + schema.org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + schema.access_token})
+			org_name = json.loads(r.text)['Name']
+
+			# Save the schema
+			schema.save()
+
+			# Run job
+			get_objects_and_fields.delay(schema)
+
+			# Build response 
+			response_data = {
+				'job_url': 'https://schemalister.herokuapp.com/loading/' + str(schema.random_id) + '/',
+				'status': 'Success',
+				'success': True
+			}
+
+	except Exception as error:
+
+		# If there is an error, raise exception and return
+		response_data = {
+			'status': 'Error',
+			'success':  False,
+			'error_text': str(error)
+		}
+	
+	return HttpResponse(json.dumps(response_data), content_type = 'application/json')

@@ -14,7 +14,11 @@ import json
 import requests
 
 @app.task
-def get_objects_and_fields(schema, instance_url, org_id, access_token): 
+def get_objects_and_fields(schema): 
+
+	instance_url = schema.instance_url
+	org_id = schema.org_id
+	access_token = schema.access_token
 
 	# List of standard objects to include
 	standard_objects = (

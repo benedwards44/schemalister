@@ -12,4 +12,5 @@ urlpatterns = patterns('',
     url(r'^job_status/(?P<schema_id>[0-9A-Za-z_\-]+)/$', 'getschema.views.job_status'),
     url(r'^loading/(?P<schema_id>[0-9A-Za-z_\-]+)/$', 'getschema.views.loading'),
     url(r'^delete_schema/(?P<schema_id>[0-9A-Za-z_\-]+)/$', 'getschema.views.delete_schema', name='delete_schema'),
+    url(r'^auth_details/$', 'getschema.views.auth_details'),
 )
