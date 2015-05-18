@@ -201,14 +201,13 @@ def auth_details(request):
 			schema.random_id = uuid.uuid4()
 			schema.created_date = datetime.datetime.now()
 			schema.org_id = request_data['org_id']
-			schema.org_name = org_name
 			schema.access_token = request_data['access_token']
 			schema.instance_url = request_data['instance_url']
 			schema.status = 'Running'
 
 			# get the org name of the authenticated user
 			r = requests.get(schema.instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/sobjects/Organization/' + schema.org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + schema.access_token})
-			org_name = json.loads(r.text)['Name']
+			schema.org_name = json.loads(r.text)['Name']
 
 			# Save the schema
 			schema.save()
