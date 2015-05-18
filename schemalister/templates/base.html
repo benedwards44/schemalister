@@ -30,56 +30,52 @@
 
 	<body>
 
-		<div id="wrapper">
+		<!-- Static navbar -->
+      	<nav class="navbar navbar-default">
 
-			<!-- Static navbar -->
-	      	<nav class="navbar navbar-default">
+	        <div class="container-fluid">
 
-		        <div class="container-fluid">
+	          	<div class="navbar-header">
+	            	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+		              	<span class="sr-only">Toggle navigation</span>
+		              	<span class="icon-bar"></span>
+		              	<span class="icon-bar"></span>
+		              	<span class="icon-bar"></span>
+	            	</button>
+		            <a class="navbar-brand" href="http://www.tquila.com" target="_blank">
+		            	<img src="/static/images/tquila-logo@1x.png" border="0" />
+		            </a>
+	          	</div>
 
-		          	<div class="navbar-header">
-		            	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-			              	<span class="sr-only">Toggle navigation</span>
-			              	<span class="icon-bar"></span>
-			              	<span class="icon-bar"></span>
-			              	<span class="icon-bar"></span>
-		            	</button>
-			            <a class="navbar-brand" href="http://www.tquila.com" target="_blank">
-			            	<img src="/static/images/tquila-logo@1x.png" border="0" />
-			            </a>
-		          	</div>
+	          	<div id="navbar" class="navbar-collapse collapse">
 
-		          	<div id="navbar" class="navbar-collapse collapse">
+	            	<ul class="nav navbar-nav navbar-right">
+	              		<li>
+	              			<a href="http://www.tquila.com/toolkit" target="_blank">Tquila Toolkit</a>
+	              		</li>
+	              		<li>
+	              			<a href="https://github.com/benedwards44/schemalister" target="_blank">Source Code</a>
+	              		</li>
+	              		<li>
+	              			<a href="https://twitter.com/benedwards44" target="_blank">@benedwards44</a>
+	              		</li>
+	              		<li>
+	              			<a href="#">
+	              				<img src="/static/images/i-icon.png" data-toggle="modal" data-target="#infoModal" />
+	              			</a>
+	              		</li>
+	            	</ul>
 
-		            	<ul class="nav navbar-nav navbar-right">
-		              		<li>
-		              			<a href="http://www.tquila.com/toolkit" target="_blank">Tquila Toolkit</a>
-		              		</li>
-		              		<li>
-		              			<a href="https://github.com/benedwards44/schemalister" target="_blank">Source Code</a>
-		              		</li>
-		              		<li>
-		              			<a href="https://twitter.com/benedwards44" target="_blank">@benedwards44</a>
-		              		</li>
-		              		<li>
-		              			<a href="#">
-		              				<img src="/static/images/i-icon.png" data-toggle="modal" data-target="#infoModal" />
-		              			</a>
-		              		</li>
-		            	</ul>
+	          	</div><!--/.nav-collapse -->
 
-		          	</div><!--/.nav-collapse -->
+	        </div><!--/.container-fluid -->
 
-		        </div><!--/.container-fluid -->
+	    </nav>
 
-		    </nav>
+		<div class="clear"></div>
 
-			<div class="clear"></div>
-
-			<div id="container">
-				{% block content %}{% endblock %}
-			</div>
-
+		<div class="col-md-12">
+			{% block content %}{% endblock %}
 		</div>
 
 		<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
