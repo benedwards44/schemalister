@@ -2,7 +2,7 @@
 
 {% block content %}
 
-	<div class="col-md-8 col-md-offset-2 text-center">
+	<div class="{% if request.GET.noheader == '1' %}col-md-12{% else %}col-md-8 col-md-offset-2{% endif %} text-center">
 
 		<h1>404 - Page Not Found</h1>
 
