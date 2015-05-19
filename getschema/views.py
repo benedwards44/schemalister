@@ -147,7 +147,15 @@ def loading(request, schema_id):
 
 	# If finished already (unlikely) direct to schema view
 	if schema.status == 'Finished':
-		return HttpResponseRedirect('/schema/' + str(schema.random_id))
+
+		# Return URL when job is finished
+		return_url = '/schema/' + str(schema.random_id) + '/'
+
+		# If no header is in URL, keep it there
+		if request.GET.noheader == '1':
+			return_url += '?noheader=1'
+
+		return HttpResponseRedirect(return_url)
 	else:
 		return render_to_response('loading.html', RequestContext(request, {'schema': schema}))	
 
