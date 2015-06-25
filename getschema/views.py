@@ -214,7 +214,7 @@ def export(request, schema_id):
 			api_name_unique = api_name
 
 		# add name to list
-		unique_names.add(api_name)
+		unique_names.append(api_name)
 
 		# Create sheet
 		sheet = book.add_worksheet(api_name_unique)	   
