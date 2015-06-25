@@ -191,10 +191,10 @@ def export(request, schema_id):
 	bold = workbook.add_format({'bold': True})
 
 	# create a sheet for each object
-	for object in schema.sorted_objects:
+	for obj in schema.sorted_objects:
 
 		# Create sheet
-		sheet = book.add_worksheet(object.api_name)	   
+		sheet = book.add_worksheet(obj.api_name)	   
 
 		# Write column headers
 		sheet.write(0, 0, 'Field Label', bold)
