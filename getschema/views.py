@@ -184,15 +184,25 @@ def export(request, schema_id):
 	# Generate output string
 	output = StringIO.StringIO()
 
+	# Create workbook
 	book = Workbook(output)
-	sheet = book.add_worksheet('test')	   
-	sheet.write(0, 0, 'Hello, world!')
+
+	# create a sheet for each object
+	for object in schema.sorted_objects:
+
+		# Create sheet
+		sheet = book.add_worksheet(object.api_name)	   
+
+		# Write to cell
+		sheet.write(0, 0, 'Hello')
+
+	# Close the book
 	book.close()
 	
 	# construct response
 	output.seek(0)
 	response = HttpResponse(output.read(), mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	response['Content-Disposition'] = "attachment; filename=test.xlsx"
+	response['Content-Disposition'] = "attachment; filename=schema.xlsx"
 
 	return response
 
