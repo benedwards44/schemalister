@@ -190,11 +190,34 @@ def export(request, schema_id):
 	# Set up bold format
 	bold = book.add_format({'bold': True})
 
+	# List of unique names, as 31 characters is the limit for an object
+	# and the worksheets names must be unique
+	unique_names = []
+	unique_count = 1
+
 	# create a sheet for each object
 	for obj in schema.sorted_objects():
 
+		# strip api name
+		api_name = obj.api_name[:29]
+
+		# If the name exists 
+		if api_name in unique_names:
+
+			# Add count integer to name
+			api_name_unique = api_name + str(unique_count)
+
+			unique_count++
+
+		else:
+
+			api_name_unique = api_name
+
+		# add name to list
+		unique_names.add(api_name)
+
 		# Create sheet
-		sheet = book.add_worksheet(obj.api_name[:31])	   
+		sheet = book.add_worksheet(api_name_unique)	   
 
 		# Write column headers
 		sheet.write(0, 0, 'Field Label', bold)
@@ -205,6 +228,9 @@ def export(request, schema_id):
 
 			#sheet.write(0, 0, field.label)
 			pass
+
+
+		
 
 	# Close the book
 	book.close()
