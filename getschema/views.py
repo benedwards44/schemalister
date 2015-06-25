@@ -181,69 +181,75 @@ def export(request, schema_id):
 	# Query for schema
 	schema = get_object_or_404(Schema, random_id = schema_id)
 
-	# Generate output string
-	output = StringIO.StringIO()
+	try:
 
-	# Create workbook
-	book = Workbook(output)
+		# Generate output string
+		output = StringIO.StringIO()
 
-	# Set up bold format
-	bold = book.add_format({'bold': True})
+		# Create workbook
+		book = Workbook(output)
 
-	# List of unique names, as 31 characters is the limit for an object
-	# and the worksheets names must be unique
-	unique_names = []
-	unique_count = 1
+		# Set up bold format
+		bold = book.add_format({'bold': True})
 
-	# create a sheet for each object
-	for obj in schema.sorted_objects_api():
+		# List of unique names, as 31 characters is the limit for an object
+		# and the worksheets names must be unique
+		unique_names = []
+		unique_count = 1
 
-		# strip api name
-		api_name = obj.api_name[:29]
+		# create a sheet for each object
+		for obj in schema.sorted_objects_api():
 
-		# If the name exists 
-		if api_name in unique_names:
+			# strip api name
+			api_name = obj.api_name[:29]
 
-			# Add count integer to name
-			api_name_unique = api_name + str(unique_count)
+			# If the name exists 
+			if api_name in unique_names:
 
-			unique_count += 1
+				# Add count integer to name
+				api_name_unique = api_name + str(unique_count)
 
-		else:
+				unique_count += 1
 
-			api_name_unique = api_name
+			else:
 
-		# add name to list
-		unique_names.append(api_name)
+				api_name_unique = api_name
 
-		# Create sheet
-		sheet = book.add_worksheet(api_name_unique)	   
+			# add name to list
+			unique_names.append(api_name)
 
-		# Write column headers
-		sheet.write(0, 0, 'Field Label', bold)
-		sheet.write(0, 1, 'API Name', bold)
-		sheet.write(0, 2, 'Type', bold)
+			# Create sheet
+			sheet = book.add_worksheet(api_name_unique)	   
 
-		# Iterate over fields in object
-		for index, field in enumerate(obj.sorted_fields()):
+			# Write column headers
+			sheet.write(0, 0, 'Field Label', bold)
+			sheet.write(0, 1, 'API Name', bold)
+			sheet.write(0, 2, 'Type', bold)
 
-			# Set start row
-			row = index + 1
+			# Iterate over fields in object
+			for index, field in enumerate(obj.sorted_fields()):
 
-			# Write fields to row
-			sheet.write(row, 0, field.label)
-			sheet.write(row, 0, field.api_name)
-			sheet.write(row, 0, field.data_type)
+				# Set start row
+				row = index + 1
 
-	# Close the book
-	book.close()
-	
-	# construct response
-	output.seek(0)
-	response = HttpResponse(output.read(), mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	response['Content-Disposition'] = "attachment; filename=schema.xlsx"
+				# Write fields to row
+				sheet.write(row, 0, field.label)
+				sheet.write(row, 1, field.api_name)
+				sheet.write(row, 2, field.data_type)
 
-	return response
+		# Close the book
+		book.close()
+		
+		# construct response
+		output.seek(0)
+		response = HttpResponse(output.read(), mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+		response['Content-Disposition'] = "attachment; filename=schema.xlsx"
+
+		return response
+
+	except Exception as ex:
+
+		return HttpResponse(ex)
 
 def delete_schema(request, schema_id):
 
