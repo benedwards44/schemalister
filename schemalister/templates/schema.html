@@ -25,10 +25,14 @@
 
 	<div class="{% if request.GET.noheader == '1' %}col-md-12{% else %}col-md-10 col-md-offset-1{% endif %}">
 
-		<h1>Salesforce Schema Lister</h1>
+		<div class="col-md-8">
+			<h1>Salesforce Schema Lister</h1>
+		</div>
+		<div class="col-md-4 text-center">
+			<button class="btn btn-default">Export to XLSX</button>
+		</div>
 		<p>
 			See the objects and fields printed below for the Org: <strong>{{ schema.org_name }}</strong> ({{ schema.org_id }}) <br/><br/>
-			Note: Your actual org schema has been deleted on loading this page. Refreshing this page will error. This is to ensure none of your Org data is captured.
 		</p>
 
 		<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">

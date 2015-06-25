@@ -160,8 +160,10 @@ def loading(request, schema_id):
 		return render_to_response('loading.html', RequestContext(request, {'schema': schema}))	
 
 def view_schema(request, schema_id):
+
 	# Pass the schema to the page but delete it after view - it's not nice to store Orgs data models
 	schema = get_object_or_404(Schema, random_id = schema_id)
+	
 	return render_to_response('schema.html', RequestContext(request,{'schema': schema}))
 
 def delete_schema(request, schema_id):
