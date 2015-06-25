@@ -196,7 +196,7 @@ def export(request, schema_id):
 	unique_count = 1
 
 	# create a sheet for each object
-	for obj in schema.sorted_objects():
+	for obj in schema.sorted_objects_api():
 
 		# strip api name
 		api_name = obj.api_name[:29]
@@ -224,13 +224,16 @@ def export(request, schema_id):
 		sheet.write(0, 1, 'API Name', bold)
 		sheet.write(0, 2, 'Type', bold)
 
+		# Iterate over fields in object
 		for index, field in enumerate(obj.sorted_fields()):
 
-			#sheet.write(0, 0, field.label)
-			pass
+			# Set start row
+			row = index + 1
 
-
-		
+			# Write fields to row
+			sheet.write(row, 0, field.label)
+			sheet.write(row, 0, field.api_name)
+			sheet.write(row, 0, field.data_type)
 
 	# Close the book
 	book.close()

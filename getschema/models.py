@@ -15,6 +15,9 @@ class Schema(models.Model):
 	def sorted_objects(self):
 		return self.object_set.order_by('label')
 
+	def sorted_objects_api(self):
+		return self.object_set.order_by('api_name')
+
 class Object(models.Model):
 	schema = models.ForeignKey(Schema)
 	label = models.CharField(max_length=255)
