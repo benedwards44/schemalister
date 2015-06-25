@@ -191,7 +191,7 @@ def export(request, schema_id):
 	bold = book.add_format({'bold': True})
 
 	# create a sheet for each object
-	for obj in schema.sorted_objects:
+	for obj in schema.sorted_objects():
 
 		# Create sheet
 		sheet = book.add_worksheet(obj.api_name)	   
@@ -200,6 +200,11 @@ def export(request, schema_id):
 		sheet.write(0, 0, 'Field Label', bold)
 		sheet.write(0, 1, 'API Name', bold)
 		sheet.write(0, 2, 'Type', bold)
+
+		for index, field in enumerate(obj.sorted_fields()):
+
+			#sheet.write(0, 0, field.label)
+			pass
 
 	# Close the book
 	book.close()
