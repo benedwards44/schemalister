@@ -194,7 +194,7 @@ def export(request, schema_id):
 	for obj in schema.sorted_objects():
 
 		# Create sheet
-		sheet = book.add_worksheet(obj.api_name)	   
+		sheet = book.add_worksheet(obj.api_name[:20])	   
 
 		# Write column headers
 		sheet.write(0, 0, 'Field Label', bold)
