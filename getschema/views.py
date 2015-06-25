@@ -11,6 +11,12 @@ import requests
 import datetime
 from time import sleep
 import uuid
+from xlsxwriter.workbook import Workbook
+
+try:
+    import cStringIO as StringIO
+except ImportError:
+    import StringIO
 
 def index(request):
 	
@@ -163,8 +169,32 @@ def view_schema(request, schema_id):
 
 	# Pass the schema to the page but delete it after view - it's not nice to store Orgs data models
 	schema = get_object_or_404(Schema, random_id = schema_id)
-	
+
 	return render_to_response('schema.html', RequestContext(request,{'schema': schema}))
+
+
+def export(request, schema_id):
+	""" 
+		Generate a XLSX file for download
+	"""
+
+	# Query for schema
+	schema = get_object_or_404(Schema, random_id = schema_id)
+
+	# Generate output string
+	output = StringIO.StringIO()
+
+	book = Workbook(output)
+    sheet = book.add_worksheet('test')       
+    sheet.write(0, 0, 'Hello, world!')
+    book.close()
+	
+	# construct response
+	output.seek(0)
+	response = HttpResponse(output.read(), mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+	response['Content-Disposition'] = "attachment; filename=test.xlsx"
+
+	return response
 
 def delete_schema(request, schema_id):
 
