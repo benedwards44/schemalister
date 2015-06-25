@@ -158,8 +158,9 @@ def loading(request, schema_id):
 		return_url = '/schema/' + str(schema.random_id) + '/'
 
 		# If no header is in URL, keep it there
-		if request.GET.noheader == '1':
-			return_url += '?noheader=1'
+		if 'noheader' in request.GET:
+			if request.GET.noheader == '1':
+				return_url += '?noheader=1'
 
 		return HttpResponseRedirect(return_url)
 	else:
