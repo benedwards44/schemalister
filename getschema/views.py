@@ -14,9 +14,9 @@ import uuid
 from xlsxwriter.workbook import Workbook
 
 try:
-    import cStringIO as StringIO
+	import cStringIO as StringIO
 except ImportError:
-    import StringIO
+	import StringIO
 
 def index(request):
 	
@@ -185,9 +185,9 @@ def export(request, schema_id):
 	output = StringIO.StringIO()
 
 	book = Workbook(output)
-    sheet = book.add_worksheet('test')       
-    sheet.write(0, 0, 'Hello, world!')
-    book.close()
+	sheet = book.add_worksheet('test')	   
+	sheet.write(0, 0, 'Hello, world!')
+	book.close()
 	
 	# construct response
 	output.seek(0)
