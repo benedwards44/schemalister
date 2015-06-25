@@ -188,7 +188,7 @@ def export(request, schema_id):
 	book = Workbook(output)
 
 	# Set up bold format
-	bold = workbook.add_format({'bold': True})
+	bold = book.add_format({'bold': True})
 
 	# create a sheet for each object
 	for obj in schema.sorted_objects:
