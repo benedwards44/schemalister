@@ -187,14 +187,19 @@ def export(request, schema_id):
 	# Create workbook
 	book = Workbook(output)
 
+	# Set up bold format
+	bold = workbook.add_format({'bold': True})
+
 	# create a sheet for each object
 	for object in schema.sorted_objects:
 
 		# Create sheet
 		sheet = book.add_worksheet(object.api_name)	   
 
-		# Write to cell
-		sheet.write(0, 0, 'Hello')
+		# Write column headers
+		sheet.write(0, 0, 'Field Label', bold)
+		sheet.write(0, 1, 'API Name', bold)
+		sheet.write(0, 2, 'Type', bold)
 
 	# Close the book
 	book.close()
