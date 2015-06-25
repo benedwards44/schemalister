@@ -207,7 +207,7 @@ def export(request, schema_id):
 			# Add count integer to name
 			api_name_unique = api_name + str(unique_count)
 
-			unique_count++
+			unique_count += 1
 
 		else:
 
