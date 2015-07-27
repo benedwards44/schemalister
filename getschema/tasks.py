@@ -94,9 +94,6 @@ def get_objects_and_fields(schema):
 						if 'inlineHelpText' in field:
 							new_field.help_text = field['inlineHelpText']
 
-						if 'description' in field:
-							new_field.description = field['description']
-
 						# lookup field
 						if field['type'] == 'reference':
 							new_field.data_type = 'Lookup ('
