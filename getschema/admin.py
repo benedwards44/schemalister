@@ -2,7 +2,7 @@ from django.contrib import admin
 from getschema.models import Schema, Object, Field, Debug
 
 class FieldInline(admin.TabularInline):
-	fields = ['label','api_name','data_type']
+	fields = ['label','api_name','data_type','description','help_text']
 	ordering = ['label']
 	model = Field
 	extra = 0
