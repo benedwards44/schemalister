@@ -90,6 +90,7 @@ def get_objects_and_fields(schema):
 						new_field.object = new_object
 						new_field.api_name = field['name']
 						new_field.label = field['label']
+						new_field.help_text = field['inlineHelpText']
 
 						# lookup field
 						if field['type'] == 'reference':

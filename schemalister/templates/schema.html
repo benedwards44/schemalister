@@ -76,9 +76,10 @@
 
 					<thead>
 						<tr>
-							<th width="30%">Field Label</th>
-							<th width="30%">API Name</th>
-							<th width="30%">Type</th>
+							<th width="25%">Field Label</th>
+							<th width="25%">API Name</th>
+							<th width="25%">Type</th>
+							<th width="25%">Help Text</th>
 						</tr>
 					</thead>
 
@@ -90,6 +91,7 @@
 							<td>{{ field.label }}</td>
 							<td>{{ field.api_name }}</td>
 							<td>{{ field.data_type|linebreaks }}</td>
+							<td>{{ field.help_text|linebreaks }}</td>
 						</tr>
 
 					{% endfor %}

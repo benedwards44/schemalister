@@ -226,6 +226,7 @@ def export(request, schema_id):
 			sheet.write(0, 0, 'Field Label', bold)
 			sheet.write(0, 1, 'API Name', bold)
 			sheet.write(0, 2, 'Type', bold)
+			sheet.write(0, 3, 'Help Text', bold)
 
 			# Iterate over fields in object
 			for index, field in enumerate(obj.sorted_fields()):
@@ -237,6 +238,7 @@ def export(request, schema_id):
 				sheet.write(row, 0, field.label)
 				sheet.write(row, 1, field.api_name)
 				sheet.write(row, 2, field.data_type)
+				sheet.write(row, 2, field.help_text)
 
 		# Close the book
 		book.close()

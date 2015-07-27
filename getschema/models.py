@@ -31,6 +31,8 @@ class Field(models.Model):
 	label = models.CharField(max_length=255)
 	api_name = models.TextField(max_length=255)
 	data_type = models.TextField()
+	description = models.TextField(blank=True, null=True)
+	help_text = models.TextField(blank=True, null=True)
 
 class Debug(models.Model):
 	debug = models.TextField()
