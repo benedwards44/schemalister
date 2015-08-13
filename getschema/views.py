@@ -238,7 +238,7 @@ def export(request, schema_id):
 				sheet.write(row, 0, field.label)
 				sheet.write(row, 1, field.api_name)
 				sheet.write(row, 2, field.data_type)
-				sheet.write(row, 2, field.help_text)
+				sheet.write(row, 3, field.help_text)
 
 		# Close the book
 		book.close()
