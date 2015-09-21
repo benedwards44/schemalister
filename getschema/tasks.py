@@ -96,6 +96,7 @@ def get_objects_and_fields(schema):
 
 						# lookup field
 						if field['type'] == 'reference':
+
 							new_field.data_type = 'Lookup ('
 
 							# Could be a list of reference objects
@@ -108,6 +109,7 @@ def get_objects_and_fields(schema):
 
 						# picklist values
 						elif field['type'] == 'picklist' or field['type'] == 'multipicklist':
+
 							new_field.data_type = field['type'].title() + ' ('
 
 							# Add in picklist values
@@ -118,7 +120,29 @@ def get_objects_and_fields(schema):
 							new_field.data_type = new_field.data_type[:-2]
 							new_field.data_type = new_field.data_type + ')'
 
-						# everything else	
+						# if text field, add field length
+						elif field['type'] == 'string' or field['type'] == 'textarea':
+
+							new_field.data_type = field['type'].title()
+
+							# Add the field length to the title
+							if 'length' in field:
+								new_field.data_type += ' (' + field['length'] + ')'
+
+						# If number, currency or percent
+						elif field['type'] == 'double' or field['type'] == 'percent' or field['type'] == 'currency':
+
+							new_field.data_type = field['type'].title()
+
+							# Add the length and precision
+							if 'precision' in field and 'scale' in field:
+
+								# Determine the length
+								length = int(field['precision']) - int(field['scale'])
+
+								# Add length and scale to the field type
+								new_field.data_type += ' (' + str(length) + ', ' + field['scale'] + ')'
+
 						else:
 							new_field.data_type = field['type'].title()
 
