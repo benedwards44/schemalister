@@ -141,6 +141,8 @@ def get_objects_and_fields(schema):
 							# Add the length and precision
 							if 'precision' in field and 'scale' in field:
 
+								pass
+
 								# Determine the length
 								#length = int(field['precision']) - int(field['scale'])
 
