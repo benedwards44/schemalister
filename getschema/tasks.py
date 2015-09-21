@@ -131,7 +131,7 @@ def get_objects_and_fields(schema):
 
 							# Add the field length to the title
 							if 'length' in field:
-								new_field.data_type += ' (' + field['length'] + ')'
+								new_field.data_type += ' (' + str(field['length']) + ')'
 
 						# If number, currency or percent
 						elif field['type'] == 'double' or field['type'] == 'percent' or field['type'] == 'currency':
@@ -141,13 +141,11 @@ def get_objects_and_fields(schema):
 							# Add the length and precision
 							if 'precision' in field and 'scale' in field:
 
-								pass
-
 								# Determine the length
-								#length = int(field['precision']) - int(field['scale'])
+								length = int(field['precision']) - int(field['scale'])
 
 								# Add length and scale to the field type
-								#new_field.data_type += ' (' + str(length) + ', ' + field['scale'] + ')'
+								new_field.data_type += ' (' + str(length) + ', ' + field['scale'] + ')'
 
 						else:
 							new_field.data_type = field['type'].title()
