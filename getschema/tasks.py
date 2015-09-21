@@ -142,10 +142,10 @@ def get_objects_and_fields(schema):
 							if 'precision' in field and 'scale' in field:
 
 								# Determine the length
-								length = int(field['precision']) - int(field['scale'])
+								#length = int(field['precision']) - int(field['scale'])
 
 								# Add length and scale to the field type
-								new_field.data_type += ' (' + str(length) + ', ' + field['scale'] + ')'
+								#new_field.data_type += ' (' + str(length) + ', ' + field['scale'] + ')'
 
 						else:
 							new_field.data_type = field['type'].title()
