@@ -146,7 +146,7 @@ def get_objects_and_fields(schema):
 								length = int(field['precision']) - int(field['scale'])
 
 								# Add length and scale to the field type
-								new_field.data_type += ' (' + str(length) + ', ' + field['scale'] + ')'
+								new_field.data_type += ' (' + str(length) + ', ' + str(field['scale']) + ')'
 
 						else:
 							new_field.data_type = field['type'].title()
