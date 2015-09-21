@@ -3,6 +3,7 @@ from celery import Celery
 from django.conf import settings
 import os
 import datetime
+import traceback
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'schemalister.settings')
 
@@ -64,110 +65,108 @@ def get_objects_and_fields(schema):
 		}
 	)
 
-	#try:
+	try:
 
-	if 'sobjects' in all_objects.json():
+		if 'sobjects' in all_objects.json():
 
-		for sObject in all_objects.json()['sobjects']:
+			for sObject in all_objects.json()['sobjects']:
 
-			if sObject['name'] in standard_objects or sObject['name'].endswith('__c'):
+				if sObject['name'] in standard_objects or sObject['name'].endswith('__c'):
 
-				# Create object record
-				new_object = Object()
-				new_object.schema = schema
-				new_object.api_name = sObject['name']
-				new_object.label = sObject['label']
-				new_object.save()
+					# Create object record
+					new_object = Object()
+					new_object.schema = schema
+					new_object.api_name = sObject['name']
+					new_object.label = sObject['label']
+					new_object.save()
 
-				# query for fields in the object
-				all_fields = requests.get(instance_url + sObject['urls']['describe'], headers={'Authorization': 'Bearer ' + access_token, 'content-type': 'application/json'})
+					# query for fields in the object
+					all_fields = requests.get(instance_url + sObject['urls']['describe'], headers={'Authorization': 'Bearer ' + access_token, 'content-type': 'application/json'})
 
-				# Loop through fields
-				for field in all_fields.json()['fields']:
+					# Loop through fields
+					for field in all_fields.json()['fields']:
 
-					# Create field
-					new_field = Field()
-					new_field.object = new_object
-					new_field.api_name = field['name']
-					new_field.label = field['label']
+						# Create field
+						new_field = Field()
+						new_field.object = new_object
+						new_field.api_name = field['name']
+						new_field.label = field['label']
 
-					if 'inlineHelpText' in field:
-						new_field.help_text = field['inlineHelpText']
+						if 'inlineHelpText' in field:
+							new_field.help_text = field['inlineHelpText']
 
-					# If a formula field, set to formula and add the return type in brackets
-					if 'calculated' in field and (field['calculated'] == True or field['calculated'] == 'true'):
-						new_field.data_type = 'Formula (' + field['type'] + ')'
+						# If a formula field, set to formula and add the return type in brackets
+						if 'calculated' in field and (field['calculated'] == True or field['calculated'] == 'true'):
+							new_field.data_type = 'Formula (' + field['type'] + ')'
 
-					# lookup field
-					elif field['type'] == 'reference':
+						# lookup field
+						elif field['type'] == 'reference':
 
-						new_field.data_type = 'Lookup ('
+							new_field.data_type = 'Lookup ('
 
-						# Could be a list of reference objects
-						for referenceObject in field['referenceTo']:
-							new_field.data_type = new_field.data_type + referenceObject.title() + ', '
+							# Could be a list of reference objects
+							for referenceObject in field['referenceTo']:
+								new_field.data_type = new_field.data_type + referenceObject.title() + ', '
 
-						# remove trailing comma and add closing bracket
-						new_field.data_type = new_field.data_type[:-2]
-						new_field.data_type = new_field.data_type + ')'
+							# remove trailing comma and add closing bracket
+							new_field.data_type = new_field.data_type[:-2]
+							new_field.data_type = new_field.data_type + ')'
 
-					# picklist values
-					elif field['type'] == 'picklist' or field['type'] == 'multipicklist':
+						# picklist values
+						elif field['type'] == 'picklist' or field['type'] == 'multipicklist':
 
-						new_field.data_type = field['type'].title() + ' ('
+							new_field.data_type = field['type'].title() + ' ('
 
-						# Add in picklist values
-						for picklist in field['picklistValues']:
-							new_field.data_type = new_field.data_type + picklist['label'] + ', '
+							# Add in picklist values
+							for picklist in field['picklistValues']:
+								new_field.data_type = new_field.data_type + picklist['label'] + ', '
 
-						# remove trailing comma and add closing bracket
-						new_field.data_type = new_field.data_type[:-2]
-						new_field.data_type = new_field.data_type + ')'
+							# remove trailing comma and add closing bracket
+							new_field.data_type = new_field.data_type[:-2]
+							new_field.data_type = new_field.data_type + ')'
 
-					# if text field, add field length
-					elif field['type'] == 'string' or field['type'] == 'textarea':
+						# if text field, add field length
+						elif field['type'] == 'string' or field['type'] == 'textarea':
 
-						new_field.data_type = field['type'].title()
+							new_field.data_type = field['type'].title()
 
-						# Add the field length to the title
-						if 'length' in field:
-							new_field.data_type += ' (' + str(field['length']) + ')'
+							# Add the field length to the title
+							if 'length' in field:
+								new_field.data_type += ' (' + str(field['length']) + ')'
 
-					# If number, currency or percent
-					elif field['type'] == 'double' or field['type'] == 'percent' or field['type'] == 'currency':
+						# If number, currency or percent
+						elif field['type'] == 'double' or field['type'] == 'percent' or field['type'] == 'currency':
 
-						new_field.data_type = field['type'].title()
+							new_field.data_type = field['type'].title()
 
-						# Add the length and precision
-						if 'precision' in field and 'scale' in field:
+							# Add the length and precision
+							if 'precision' in field and 'scale' in field:
 
-							# Determine the length
-							length = int(field['precision']) - int(field['scale'])
+								# Determine the length
+								length = int(field['precision']) - int(field['scale'])
 
-							# Add length and scale to the field type
-							new_field.data_type += ' (' + str(length) + ', ' + field['scale'] + ')'
+								# Add length and scale to the field type
+								new_field.data_type += ' (' + str(length) + ', ' + field['scale'] + ')'
 
-					else:
-						new_field.data_type = field['type'].title()
+						else:
+							new_field.data_type = field['type'].title()
 
-					new_field.save()
+						new_field.save()
 
-		schema.status = 'Finished'
+			schema.status = 'Finished'
 
-	else:
+		else:
 
-		schema.status = 'Error'
-		schema.error = 'There was no objects returned from the query'
+			schema.status = 'Error'
+			schema.error = 'There was no objects returned from the query'
 
-		debug = Debug()
-		debug.debug = all_objects.text
-		debug.save()
+			debug = Debug()
+			debug.debug = all_objects.text
+			debug.save()
 
-	"""
 	except Exception as error:
 		schema.status = 'Error'
-		schema.error = error
-	"""
+		schema.error = traceback.format_exc()
 	
 	schema.finished_date = datetime.datetime.now()
 	schema.save()
