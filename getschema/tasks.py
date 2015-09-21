@@ -94,8 +94,12 @@ def get_objects_and_fields(schema):
 						if 'inlineHelpText' in field:
 							new_field.help_text = field['inlineHelpText']
 
+						# If a formula field, set to formula and add the return type in brackets
+						if 'calculated' in field and (field['calculated'] == True or field['calculated'] == 'true'):
+							new_field.data_type = 'Formula (' + field['type'] + ')'
+
 						# lookup field
-						if field['type'] == 'reference':
+						elif field['type'] == 'reference':
 
 							new_field.data_type = 'Lookup ('
 
