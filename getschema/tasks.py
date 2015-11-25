@@ -38,8 +38,6 @@ def get_objects_and_fields(schema):
 		'FAQ__DataCategorySelection',
 		'FAQ__ViewStat',
 		'FAQ__VoteStat',
-		'FAQ__ka',
-		'FAQ__kav',
 		'Event',
 		'ForecastingAdjustment',
 		'ForecastingQuota',
@@ -77,7 +75,7 @@ def get_objects_and_fields(schema):
 
 			for sObject in all_objects.json()['sobjects']:
 
-				if sObject['name'] in standard_objects or sObject['name'].endswith('__c'):
+				if sObject['name'] in standard_objects or sObject['name'].endswith('__c') or sObject['name'].endswith('__kav'):
 
 					# Create object record
 					new_object = Object()
