@@ -38,6 +38,7 @@ def get_objects_and_fields(schema):
 		'Event',
 		'ForecastingAdjustment',
 		'ForecastingQuota',
+		'KnowledgeArticle',
 		'Lead',
 		'Opportunity',
 		'OpportunityCompetitor',
