@@ -124,7 +124,7 @@ def get_objects_and_fields(schema):
 									new_field = Field()
 									new_field.object = new_object
 									new_field.api_name = field.fullName
-									new_field.label = fullName.label
+									new_field.label = field.label
 
 									if 'description'in field:
 										new_field.description = field['description']
