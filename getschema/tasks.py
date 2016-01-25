@@ -43,7 +43,6 @@ def get_objects_and_fields(schema):
 		'OpportunityLineItem',
 		'Order',
 		'OrderItem',
-		'PartnerRole',
 		'Pricebook2',
 		'PricebookEntry',
 		'Product2',
