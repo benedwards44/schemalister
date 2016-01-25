@@ -105,92 +105,88 @@ def get_objects_and_fields(schema):
 					if len(object_list) >= 10 or (len(all_objects.json()['sobjects']) - loop_counter) <= 10:
 
 						# Query for the sobjects
-						try:
+						sobjects_result = metadata_client.service.readMetadata('CustomObject', object_list)
 
-							sobjects_result = metadata_client.service.readMetadata('CustomObject', object_list)
+						# Query for the objects
+						for sobject in sobjects_result[0]:
 
-							# Query for the objects
-							for sobject in sobjects_result[0]:
+							if 'fields'in sobject:
 
-								if 'fields'in sobject:
+								# Loop through fields
+								for field in sobject.fields:
 
-									# Loop through fields
-									for field in sobject.fields:
+									if 'fullName' in field and 'label' in field:
 
-										if 'fullName' in field and 'label' in field:
+										# Create field
+										new_field = Field()
+										new_field.object = new_object
+										new_field.api_name = field.fullName
+										new_field.label = field.label
 
-											# Create field
-											new_field = Field()
-											new_field.object = new_object
-											new_field.api_name = field.fullName
-											new_field.label = field.label
+										if 'description'in field:
+											new_field.description = field['description']
 
-											if 'description'in field:
-												new_field.description = field['description']
+										if 'inlineHelpText' in field:
+											new_field.help_text = field['inlineHelpText']
 
-											if 'inlineHelpText' in field:
-												new_field.help_text = field['inlineHelpText']
+										# If a formula field, set to formula and add the return type in brackets
+										if 'calculated' in field and (field['calculated'] == True or field['calculated'] == 'true'):
+											new_field.data_type = 'Formula (' + field['type'] + ')'
 
-											# If a formula field, set to formula and add the return type in brackets
-											if 'calculated' in field and (field['calculated'] == True or field['calculated'] == 'true'):
-												new_field.data_type = 'Formula (' + field['type'] + ')'
+										# lookup field
+										elif field['type'] == 'reference':
 
-											# lookup field
-											elif field['type'] == 'reference':
+											new_field.data_type = 'Lookup ('
 
-												new_field.data_type = 'Lookup ('
+											# Could be a list of reference objects
+											for referenceObject in field['referenceTo']:
+												new_field.data_type = new_field.data_type + referenceObject.title() + ', '
 
-												# Could be a list of reference objects
-												for referenceObject in field['referenceTo']:
-													new_field.data_type = new_field.data_type + referenceObject.title() + ', '
+											# remove trailing comma and add closing bracket
+											new_field.data_type = new_field.data_type[:-2]
+											new_field.data_type = new_field.data_type + ')'
 
-												# remove trailing comma and add closing bracket
-												new_field.data_type = new_field.data_type[:-2]
-												new_field.data_type = new_field.data_type + ')'
+										# picklist values
+										elif field['type'] == 'picklist' or field['type'] == 'multipicklist':
 
-											# picklist values
-											elif field['type'] == 'picklist' or field['type'] == 'multipicklist':
+											new_field.data_type = field['type'].title() + ' ('
 
-												new_field.data_type = field['type'].title() + ' ('
+											# Add in picklist values
+											for picklist in field.picklist['picklistValues']:
+												new_field.data_type = new_field.data_type + picklist['label'] + ', '
 
-												# Add in picklist values
-												for picklist in field.picklist['picklistValues']:
-													new_field.data_type = new_field.data_type + picklist['label'] + ', '
+											# remove trailing comma and add closing bracket
+											new_field.data_type = new_field.data_type[:-2]
+											new_field.data_type = new_field.data_type + ')'
 
-												# remove trailing comma and add closing bracket
-												new_field.data_type = new_field.data_type[:-2]
-												new_field.data_type = new_field.data_type + ')'
+										# if text field, add field length
+										elif field['type'] == 'string' or field['type'] == 'textarea':
 
-											# if text field, add field length
-											elif field['type'] == 'string' or field['type'] == 'textarea':
+											new_field.data_type = field['type'].title()
 
-												new_field.data_type = field['type'].title()
+											# Add the field length to the title
+											if 'length' in field:
+												new_field.data_type += ' (' + str(field['length']) + ')'
 
-												# Add the field length to the title
-												if 'length' in field:
-													new_field.data_type += ' (' + str(field['length']) + ')'
+										# If number, currency or percent
+										elif field['type'] == 'double' or field['type'] == 'percent' or field['type'] == 'currency':
 
-											# If number, currency or percent
-											elif field['type'] == 'double' or field['type'] == 'percent' or field['type'] == 'currency':
+											new_field.data_type = field['type'].title()
 
-												new_field.data_type = field['type'].title()
+											# Add the length and precision
+											if 'precision' in field and 'scale' in field:
 
-												# Add the length and precision
-												if 'precision' in field and 'scale' in field:
+												# Determine the length
+												length = int(field['precision']) - int(field['scale'])
 
-													# Determine the length
-													length = int(field['precision']) - int(field['scale'])
+												# Add length and scale to the field type
+												new_field.data_type += ' (' + str(length) + ',' + str(field['scale']) + ')'
 
-													# Add length and scale to the field type
-													new_field.data_type += ' (' + str(length) + ',' + str(field['scale']) + ')'
+										else:
+											new_field.data_type = field['type'].title()
 
-											else:
-												new_field.data_type = field['type'].title()
+										new_field.save()
 
-											new_field.save()
-
-						except:
-							pass
 							
 						# Clear the object list now
 						object_list = []
