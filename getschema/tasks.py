@@ -13,7 +13,7 @@ from getschema.models import Schema, Object, Field, Debug
 from django.conf import settings
 import json	
 import requests
-from suds.cient import Client
+#from suds.cient import Client
 
 @app.task
 def get_objects_and_fields(schema): 
