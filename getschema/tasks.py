@@ -67,7 +67,7 @@ def get_objects_and_fields(schema):
 		if 'sobjects' in all_objects.json():
 
 			# Moved logic to metadata API to get field names for fields
-			metadata_client = Client('https://schemalister.herokuapp.com/static/metadata-' + str(settings.SALESFORCE_API_VERSION) + '.wsdl.xml')
+			metadata_client = Client('https://schemalister.herokuapp.com/static/metadata-' + str(settings.SALESFORCE_API_VERSION) + '.wsdl.xml?x=1')
 			
 			# URL for metadata API
 			metadata_url = instance_url + '/services/Soap/m/' + str(settings.SALESFORCE_API_VERSION) + '.0/' + org_id
