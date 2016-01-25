@@ -109,6 +109,8 @@ def get_objects_and_fields(schema):
 					# at one time, or if there is less than 10 components left to query 
 					if len(object_list) >= 10 or (len(all_objects.json()['sobjects']) - loop_counter) <= 10:
 
+						print object_list
+
 						# Query for the sobjects
 						sobjects_result = metadata_client.service.readMetadata('CustomObject', object_list)
 
