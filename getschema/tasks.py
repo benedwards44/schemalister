@@ -67,6 +67,8 @@ def get_objects_and_fields(schema):
 		}
 	)
 
+	object_list_queried = []
+
 	try:
 
 		if 'sobjects' in all_objects.json():
@@ -108,6 +110,8 @@ def get_objects_and_fields(schema):
 					# Run the metadata query only if the list has reached 10 (the max allowed to query)
 					# at one time, or if there is less than 10 components left to query 
 					if len(object_list) >= 10 or (len(all_objects.json()['sobjects']) - loop_counter) <= 10:
+
+						object_list_queried.extend(object_list)
 
 						# Query for the sobjects
 						sobjects_result = metadata_client.service.readMetadata('CustomObject', object_list)
@@ -211,7 +215,7 @@ def get_objects_and_fields(schema):
 
 	except Exception as error:
 		schema.status = 'Error'
-		schema.error = traceback.format_exc()
+		schema.error = object_list_queried + '\n\n' + traceback.format_exc()
 	
 	schema.finished_date = datetime.datetime.now()
 	schema.save()
