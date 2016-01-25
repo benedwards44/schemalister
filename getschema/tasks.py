@@ -215,7 +215,7 @@ def get_objects_and_fields(schema):
 
 	except Exception as error:
 		schema.status = 'Error'
-		schema.error = object_list_queried + '\n\n' + traceback.format_exc()
+		schema.error = traceback.format_exc()
 	
 	schema.finished_date = datetime.datetime.now()
 	schema.save()
