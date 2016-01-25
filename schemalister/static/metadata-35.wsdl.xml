@@ -1574,7 +1574,6 @@ Copyright 2006-2016 Salesforce.com, inc. All Rights Reserved
        <xsd:element name="reparentableMasterDetail" minOccurs="0" type="xsd:boolean"/>
        <xsd:element name="required" minOccurs="0" type="xsd:boolean"/>
        <xsd:element name="restrictedAdminField" minOccurs="0" type="xsd:boolean"/>
-       <xsd:element name="restrictedPicklist" minOccurs="0" type="xsd:boolean"/>
        <xsd:element name="scale" minOccurs="0" type="xsd:int"/>
        <xsd:element name="startingNumber" minOccurs="0" type="xsd:int"/>
        <xsd:element name="stripMarkup" minOccurs="0" type="xsd:boolean"/>
@@ -1644,6 +1643,7 @@ Copyright 2006-2016 Salesforce.com, inc. All Rights Reserved
     <xsd:sequence>
      <xsd:element name="controllingField" minOccurs="0" type="xsd:string"/>
      <xsd:element name="picklistValues" minOccurs="0" maxOccurs="unbounded" type="tns:PicklistValue"/>
+     <xsd:element name="restrictedPicklist" minOccurs="0" type="xsd:boolean"/>
      <xsd:element name="sorted" type="xsd:boolean"/>
     </xsd:sequence>
    </xsd:complexType>
