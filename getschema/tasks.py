@@ -72,7 +72,7 @@ def get_objects_and_fields(schema):
 		if 'sobjects' in all_objects.json():
 
 			# Moved logic to metadata API to get field names for fields
-			metadata_client = Client('https://schemalister.herokuapp.com/static/metadata-35.wsdl.xml')
+			metadata_client = Client('https://schemalister.herokuapp.com/static/metadata-' + str(settings.SALESFORCE_API_VERSION) + '.wsdl.xml')
 			
 			# URL for metadata API
 			metadata_url = instance_url + '/services/Soap/m/' + str(settings.SALESFORCE_API_VERSION) + '.0/' + org_id
@@ -108,8 +108,6 @@ def get_objects_and_fields(schema):
 					# Run the metadata query only if the list has reached 10 (the max allowed to query)
 					# at one time, or if there is less than 10 components left to query 
 					if len(object_list) >= 10 or (len(all_objects.json()['sobjects']) - loop_counter) <= 10:
-
-						print object_list
 
 						# Query for the sobjects
 						sobjects_result = metadata_client.service.readMetadata('CustomObject', object_list)
