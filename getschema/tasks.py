@@ -120,75 +120,77 @@ def get_objects_and_fields(schema):
 								# Loop through fields
 								for field in sobject.fields:
 
-									# Create field
-									new_field = Field()
-									new_field.object = new_object
-									new_field.api_name = field.fullName
-									new_field.label = field.label
+									if 'fullName' in field and 'label' in field:
 
-									if 'description'in field:
-										new_field.description = field['description']
+										# Create field
+										new_field = Field()
+										new_field.object = new_object
+										new_field.api_name = field.fullName
+										new_field.label = field.label
 
-									if 'inlineHelpText' in field:
-										new_field.help_text = field['inlineHelpText']
+										if 'description'in field:
+											new_field.description = field['description']
 
-									# If a formula field, set to formula and add the return type in brackets
-									if 'calculated' in field and (field['calculated'] == True or field['calculated'] == 'true'):
-										new_field.data_type = 'Formula (' + field['type'] + ')'
+										if 'inlineHelpText' in field:
+											new_field.help_text = field['inlineHelpText']
 
-									# lookup field
-									elif field['type'] == 'reference':
+										# If a formula field, set to formula and add the return type in brackets
+										if 'calculated' in field and (field['calculated'] == True or field['calculated'] == 'true'):
+											new_field.data_type = 'Formula (' + field['type'] + ')'
 
-										new_field.data_type = 'Lookup ('
+										# lookup field
+										elif field['type'] == 'reference':
 
-										# Could be a list of reference objects
-										for referenceObject in field['referenceTo']:
-											new_field.data_type = new_field.data_type + referenceObject.title() + ', '
+											new_field.data_type = 'Lookup ('
 
-										# remove trailing comma and add closing bracket
-										new_field.data_type = new_field.data_type[:-2]
-										new_field.data_type = new_field.data_type + ')'
+											# Could be a list of reference objects
+											for referenceObject in field['referenceTo']:
+												new_field.data_type = new_field.data_type + referenceObject.title() + ', '
 
-									# picklist values
-									elif field['type'] == 'picklist' or field['type'] == 'multipicklist':
+											# remove trailing comma and add closing bracket
+											new_field.data_type = new_field.data_type[:-2]
+											new_field.data_type = new_field.data_type + ')'
 
-										new_field.data_type = field['type'].title() + ' ('
+										# picklist values
+										elif field['type'] == 'picklist' or field['type'] == 'multipicklist':
 
-										# Add in picklist values
-										for picklist in field.picklist['picklistValues']:
-											new_field.data_type = new_field.data_type + picklist['label'] + ', '
+											new_field.data_type = field['type'].title() + ' ('
 
-										# remove trailing comma and add closing bracket
-										new_field.data_type = new_field.data_type[:-2]
-										new_field.data_type = new_field.data_type + ')'
+											# Add in picklist values
+											for picklist in field.picklist['picklistValues']:
+												new_field.data_type = new_field.data_type + picklist['label'] + ', '
 
-									# if text field, add field length
-									elif field['type'] == 'string' or field['type'] == 'textarea':
+											# remove trailing comma and add closing bracket
+											new_field.data_type = new_field.data_type[:-2]
+											new_field.data_type = new_field.data_type + ')'
 
-										new_field.data_type = field['type'].title()
+										# if text field, add field length
+										elif field['type'] == 'string' or field['type'] == 'textarea':
 
-										# Add the field length to the title
-										if 'length' in field:
-											new_field.data_type += ' (' + str(field['length']) + ')'
+											new_field.data_type = field['type'].title()
 
-									# If number, currency or percent
-									elif field['type'] == 'double' or field['type'] == 'percent' or field['type'] == 'currency':
+											# Add the field length to the title
+											if 'length' in field:
+												new_field.data_type += ' (' + str(field['length']) + ')'
 
-										new_field.data_type = field['type'].title()
+										# If number, currency or percent
+										elif field['type'] == 'double' or field['type'] == 'percent' or field['type'] == 'currency':
 
-										# Add the length and precision
-										if 'precision' in field and 'scale' in field:
+											new_field.data_type = field['type'].title()
 
-											# Determine the length
-											length = int(field['precision']) - int(field['scale'])
+											# Add the length and precision
+											if 'precision' in field and 'scale' in field:
 
-											# Add length and scale to the field type
-											new_field.data_type += ' (' + str(length) + ',' + str(field['scale']) + ')'
+												# Determine the length
+												length = int(field['precision']) - int(field['scale'])
 
-									else:
-										new_field.data_type = field['type'].title()
+												# Add length and scale to the field type
+												new_field.data_type += ' (' + str(length) + ',' + str(field['scale']) + ')'
 
-									new_field.save()
+										else:
+											new_field.data_type = field['type'].title()
+
+										new_field.save()
 
 						# Clear the object list now
 						object_list = []
