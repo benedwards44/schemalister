@@ -1559,6 +1559,7 @@ Copyright 2006-2016 Salesforce.com, inc. All Rights Reserved
        <xsd:element name="deprecated" minOccurs="0" type="xsd:boolean"/>
        <xsd:element name="description" minOccurs="0" type="xsd:string"/>
        <xsd:element name="displayFormat" minOccurs="0" type="xsd:string"/>
+       <xsd:element name="displayLocationInDecimal" minOccurs="0" type="xsd:boolean"/>
        <xsd:element name="encrypted" minOccurs="0" type="xsd:boolean"/>
        <xsd:element name="escapeMarkup" minOccurs="0" type="xsd:boolean"/>
        <xsd:element name="externalDeveloperName" minOccurs="0" type="xsd:string"/>
