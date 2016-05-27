@@ -66,6 +66,61 @@ def get_objects_and_fields(schema):
 
 		if 'sobjects' in all_objects.json():
 
+			if sObject['name'] in standard_objects or sObject['name'].endswith('__c'):
+
+				# Create object record
+				new_object = Object()
+				new_object.schema = schema
+				new_object.api_name = sObject['name']
+				new_object.label = sObject['label']
+				new_object.save()
+
+				# query for fields in the object
+				all_fields = requests.get(instance_url + sObject['urls']['describe'], headers={'Authorization': 'Bearer ' + access_token, 'content-type': 'application/json'})
+
+				# Loop through fields
+				for field in all_fields.json()['fields']:
+
+					# Create field
+					new_field = Field()
+					new_field.object = new_object
+					new_field.api_name = field['name']
+					new_field.label = field['label']
+
+					# lookup field
+					if field['type'] == 'reference':
+						new_field.data_type = 'Lookup ('
+
+						# Could be a list of reference objects
+						for referenceObject in field['referenceTo']:
+							new_field.data_type = new_field.data_type + referenceObject.title() + ', '
+
+						# remove trailing comma and add closing bracket
+						new_field.data_type = new_field.data_type[:-2]
+						new_field.data_type = new_field.data_type + ')'
+
+					# picklist values
+					elif field['type'] == 'picklist' or field['type'] == 'multipicklist':
+						new_field.data_type = field['type'].title() + ' ('
+
+						# Add in picklist values
+						for picklist in field['picklistValues']:
+							new_field.data_type = new_field.data_type + picklist['label'] + ', '
+
+						# remove trailing comma and add closing bracket
+						new_field.data_type = new_field.data_type[:-2]
+						new_field.data_type = new_field.data_type + ')'
+
+					# everything else	
+					else:
+						new_field.data_type = field['type'].title()
+
+					new_field.save()
+			
+			"""
+			27th May 2016 - Getting rid of Metadata API, it wasn't returning standard fields properly
+
+
 			# Moved logic to metadata API to get field names for fields
 			metadata_client = Client('https://schemalister.herokuapp.com/static/metadata-' + str(settings.SALESFORCE_API_VERSION) + '.wsdl.xml?x=1')
 			
@@ -193,6 +248,8 @@ def get_objects_and_fields(schema):
 
 					# Increment the count
 					loop_counter = loop_counter + 1
+
+					"""
 
 			schema.status = 'Finished'
 
