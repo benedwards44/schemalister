@@ -76,11 +76,13 @@
 
 					<thead>
 						<tr>
-							<th width="20%">Field Label</th>
-							<th width="20%">API Name</th>
-							<th width="20%">Type</th>
+							<th width="25%">Field Label</th>
+							<th width="25%">API Name</th>
+							<th width="25%">Type</th>
+							<!--
 							<th width="20%">Description</th>
-							<th width="20%">Help Text</th>
+							-->
+							<th width="25%">Help Text</th>
 						</tr>
 					</thead>
 
@@ -92,7 +94,9 @@
 							<td>{{ field.label }}</td>
 							<td>{{ field.api_name }}</td>
 							<td>{{ field.data_type|linebreaks }}</td>
+							<!--
 							<td>{% if field.description %}{{ field.description|linebreaks }}{% endif %}</td>
+							-->
 							<td>{% if field.help_text %}{{ field.help_text|linebreaks }}{% endif %}</td>
 						</tr>
 
