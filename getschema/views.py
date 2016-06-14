@@ -188,7 +188,7 @@ def export(request, schema_id):
 		output = StringIO.StringIO()
 
 		# Create workbook
-		book = Workbook(output)
+		book = Workbook(output, {'in_memory': True})
 
 		# Set up bold format
 		bold = book.add_format({'bold': True})
@@ -247,7 +247,8 @@ def export(request, schema_id):
 		
 		# construct response
 		output.seek(0)
-		response = HttpResponse(output.read(), mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+		
+		response = HttpResponse(output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 		response['Content-Disposition'] = "attachment; filename=schema.xlsx"
 
 		return response
