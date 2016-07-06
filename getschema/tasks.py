@@ -124,9 +124,16 @@ def get_objects_and_fields(schema):
 						elif field['type'] == 'int':
 							new_field.data_type = 'Number (' + str(field['digits']) + ', 0)'
 
+						elif field['type'] == 'boolean':
+							new_field.data_type = 'Checkbox'
+
 						# everything else
 						else:
 							new_field.data_type = field['type'].title()
+
+							# Change Double to Number
+							if new_field.data_type == 'Double':
+								new_field.data_type = 'Number'
 
 							# If there is a length component, add to the field type
 							if 'length' in field and int(field['length']) > 0:
