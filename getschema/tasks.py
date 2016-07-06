@@ -116,9 +116,25 @@ def get_objects_and_fields(schema):
 							new_field.data_type = new_field.data_type[:-2]
 							new_field.data_type = new_field.data_type + ')'
 
-						# everything else	
+						# Text
+						elif field['type'] == 'string':
+							new_field.data_type = 'Text (' + field['length'] + ')'
+
+						# everything else
 						else:
 							new_field.data_type = field['type'].title()
+
+							# If there is a length component, add to the field type
+							if 'length' in field and field['length'] > 0:
+								new_field.data_type += ' (' + str(field['length']) + ')'
+
+							# If there is a precision element
+							if 'precision' in field and field['precision'] > 0:
+
+								# Determine the number of digits
+								num_digits = int(field['precision']) - int(field['scale'])
+
+								new_field.data_type += ' (' + str(num_digits) + ', ' + str(field['scale']) + ')'
 
 						new_field.save()
 
