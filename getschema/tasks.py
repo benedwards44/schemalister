@@ -118,7 +118,7 @@ def get_objects_and_fields(schema):
 
 						# Text
 						elif field['type'] == 'string':
-							new_field.data_type = 'Text (' + field['length'] + ')'
+							new_field.data_type = 'Text (' + str(field['length']) + ')'
 
 						# everything else
 						else:
