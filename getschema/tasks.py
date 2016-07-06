@@ -125,15 +125,16 @@ def get_objects_and_fields(schema):
 							new_field.data_type = field['type'].title()
 
 							# If there is a length component, add to the field type
-							if 'length' in field and field['length'] > 0:
+							if 'length' in field and int(field['length']) > 0:
 								new_field.data_type += ' (' + str(field['length']) + ')'
 
 							# If there is a precision element
-							if 'precision' in field and field['precision'] > 0:
+							if 'precision' in field and int(field['precision']) > 0:
 
 								# Determine the number of digits
 								num_digits = int(field['precision']) - int(field['scale'])
 
+								# Set the precision and scale against the field
 								new_field.data_type += ' (' + str(num_digits) + ', ' + str(field['scale']) + ')'
 
 						new_field.save()
