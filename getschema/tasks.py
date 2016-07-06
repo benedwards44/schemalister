@@ -120,6 +120,10 @@ def get_objects_and_fields(schema):
 						elif field['type'] == 'string':
 							new_field.data_type = 'Text (' + str(field['length']) + ')'
 
+						# Int
+						elif field['type'] == 'int':
+							new_field.data_type = 'Number (' + str(field['digits']) + ', 0)'
+
 						# everything else
 						else:
 							new_field.data_type = field['type'].title()
