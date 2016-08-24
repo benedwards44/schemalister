@@ -51,6 +51,8 @@ def get_objects_and_fields(schema):
 		'Solution',
 		'Task',
 		'User',
+		'WorkOrder',
+		'WorkOrderLineItem',
 	)
 
 	# Describe all sObjects
