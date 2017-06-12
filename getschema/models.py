@@ -11,6 +11,7 @@ class Schema(models.Model):
 	access_token = models.CharField(max_length=255, blank=True)
 	instance_url = models.CharField(max_length=255, blank=True)
 	include_field_usage = models.BooleanField(default=False)
+	field_usage_display = models.TextField(blank=True, null=True)
 	status = models.CharField(max_length=255, blank=True)
 	error = models.TextField(blank=True)
 
@@ -38,31 +39,31 @@ class Field(models.Model):
 	help_text = models.TextField(blank=True, null=True)
 
 	def page_layout_usage(self):
-		return self.fieldusage_set.filter(type='Page Layout')
+		return self.fieldusage_set.values_list('name', flat=True).filter(type='Page Layout').order_by('name')
 
 	def workflow_usage(self):
-		return self.fieldusage_set.filter(type='Workflow')
+		return self.fieldusage_set.values_list('name', flat=True).filter(type='Workflow').order_by('name')
 
 	def field_update_usage(self):
-		return self.fieldusage_set.filter(type='Field Update')
+		return self.fieldusage_set.values_list('name', flat=True).filter(type='Field Update').order_by('name')
 
 	def email_template_usage(self):
-		return self.fieldusage_set.filter(type='Email Template')
+		return self.fieldusage_set.values_list('name', flat=True).filter(type='Email Template').order_by('name')
 
 	def flow_usage(self):
-		return self.fieldusage_set.filter(type='Flow')
+		return self.fieldusage_set.values_list('name', flat=True).filter(type='Flow').order_by('name')
 
 	def classes_usage(self):
-		return self.fieldusage_set.filter(type='Apex Class')
+		return self.fieldusage_set.values_list('name', flat=True).filter(type='Apex Class').order_by('name')
 
 	def triggers_usage(self):
-		return self.fieldusage_set.filter(type='Apex Trigger')
+		return self.fieldusage_set.values_list('name', flat=True).filter(type='Apex Trigger').order_by('name')
 
 	def components_usage(self):
-		return self.fieldusage_set.filter(type='VisualForce Component')
+		return self.fieldusage_set.values_list('name', flat=True).filter(type='VisualForce Component').order_by('name')
 
 	def pages_usage(self):
-		return self.fieldusage_set.filter(type='VisualForce Page')
+		return self.fieldusage_set.values_list('name', flat=True).filter(type='VisualForce Page').order_by('name')
 
 	def usages(self):
 		return self.fieldusage_set.all()

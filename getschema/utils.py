@@ -172,6 +172,26 @@ def create_field_usage(field, type, name):
     field_usage.save()
 
 
+def build_usage_display(all_fields):
+    """
+    For each field, build the display to save against the field.
+    """
+
+    for field in all_fields:
+
+        usage_display = ''
+
+        usage_display = write_usage_to_field(usage_display, field.page_layout_usage(), 'Page Layouts')
+        usage_display = write_usage_to_field(usage_display, field.workflow_usage(), 'Workflows')
+        usage_display = write_usage_to_field(usage_display, field.field_update_usage(), 'Field Updates')
+        usage_display = write_usage_to_field(usage_display, field.flow_usage(), 'Flows')
+        usage_display = write_usage_to_field(usage_display, field.email_template_usage(), 'Email Templates')
+        usage_display = write_usage_to_field(usage_display, field.classes_usage(), 'Apex Classes')
+        usage_display = write_usage_to_field(usage_display, field.triggers_usage(), 'Apex Triggers')
+        usage_display = write_usage_to_field(usage_display, field.components_usage(), 'VisualForce Pages')
+        usage_display = write_usage_to_field(usage_display, field.pages_usage(), 'VisualForce Components')
+
+        field.save()
 
 def create_excel_export(schema):
     """
@@ -261,13 +281,33 @@ def create_excel_export(schema):
     book.close()
 
 
-def write_usage_to_cell(usage_list):
+def write_usage_to_cell(usage_list, is_html=False):
     """
     Take a cell and write the usage for that field to it
     """
     usage_cell = ''
     if usage_list:
-        for usage in usage_list:
-            usage_cell += '- ' + usage.name
+        if is_html:
+            for usage in usage_list:
+                usage_cell += '<li>' + usage + '</li>\n'
+        else:
+            for usage in usage_list:
+                usage_cell += '- ' + usage + '\n'
     return usage_cell
+
+
+def write_usage_to_field(usage_display, usage_list, label):
+    """
+    Build the list of usage for the display field
+    """
+
+    if usage_list:
+        if label != 'Page Layouts':
+            usage_display += '<br />\n'
+        usage_display += '<strong>%s</strong>\n' % label
+        usage_display += '<ul class="no-padding-left">\n'
+        usage_display += write_usage_to_cell(usage_list, is_html=True)
+        usage_display += '</ul>'
+
+    return usage_display
 

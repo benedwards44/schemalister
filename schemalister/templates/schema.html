@@ -95,25 +95,7 @@
 							<td>{{ field.api_name }}</td>
 							<td>{{ field.data_type|linebreaks }}</td>
 							<td>{% if field.help_text %}{{ field.help_text|linebreaks }}{% endif %}</td>
-							<td>
-								{% include 'snippets/usage_list.html' with usage_list=field.page_layout_usage %}
-
-								{% include 'snippets/usage_list.html' with usage_list=field.workflow_usage %}
-
-								{% include 'snippets/usage_list.html' with usage_list=field.field_update_usage %}
-
-								{% include 'snippets/usage_list.html' with usage_list=field.email_template_usage %}
-
-								{% include 'snippets/usage_list.html' with usage_list=field.flow_usage %}
-
-								{% include 'snippets/usage_list.html' with usage_list=field.classes_usage %}
-
-								{% include 'snippets/usage_list.html' with usage_list=field.triggers_usage %}
-
-								{% include 'snippets/usage_list.html' with usage_list=field.components_usage %}
-
-								{% include 'snippets/usage_list.html' with usage_list=field.pages_usage %}
-							</td>
+							<td>{{ field.field_usage_display|safe }}</td>
 						</tr>
 
 					{% endfor %}

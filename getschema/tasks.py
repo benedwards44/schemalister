@@ -183,6 +183,8 @@ def get_objects_and_fields(schema):
 
 					utils.get_usage_for_component(all_fields, schema, 'ApexTrigger')
 
+					utils.build_usage_display(all_fields)
+
 					schema.status = 'Finished'
 
 				except Exception as error:
