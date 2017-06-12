@@ -97,7 +97,7 @@ def get_record_string(record_json, component_name):
     Returns the record string to see if the field exists inside it
     """
 
-    record_string = None
+    record_string = ''
 
     try:
 
