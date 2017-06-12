@@ -112,6 +112,7 @@ def oauth_response(request):
 				schema.org_name = org_name
 				schema.access_token = access_token
 				schema.instance_url = instance_url
+				schema.include_field_usage = login_form.cleaned_data['include_field_usage']
 				schema.status = 'Running'
 				schema.save()
 
@@ -124,8 +125,6 @@ def oauth_response(request):
 					try:
 						get_objects_and_fields.delay(schema)
 					except Exception as error:
-						# Sleep another 5
-						sleep(5)
 						schema.status = 'Error'
 						schema.error = error
 						schema.save()
