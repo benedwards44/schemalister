@@ -191,6 +191,8 @@ def build_usage_display(all_fields):
         usage_display = write_usage_to_field(usage_display, field.components_usage(), 'VisualForce Pages')
         usage_display = write_usage_to_field(usage_display, field.pages_usage(), 'VisualForce Components')
 
+        # Save to the field
+        field.field_usage_display = usage_display
         field.save()
 
 def create_excel_export(schema):
@@ -302,10 +304,8 @@ def write_usage_to_field(usage_display, usage_list, label):
     """
 
     if usage_list:
-        if label != 'Page Layouts':
-            usage_display += '<br />\n'
         usage_display += '<strong>%s</strong>\n' % label
-        usage_display += '<ul class="no-padding-left">\n'
+        usage_display += '<ul class="usage-list">\n'
         usage_display += write_usage_to_cell(usage_list, is_html=True)
         usage_display += '</ul>'
 

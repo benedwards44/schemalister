@@ -11,7 +11,6 @@ class Schema(models.Model):
 	access_token = models.CharField(max_length=255, blank=True)
 	instance_url = models.CharField(max_length=255, blank=True)
 	include_field_usage = models.BooleanField(default=False)
-	field_usage_display = models.TextField(blank=True, null=True)
 	status = models.CharField(max_length=255, blank=True)
 	error = models.TextField(blank=True)
 
@@ -37,6 +36,8 @@ class Field(models.Model):
 	data_type = models.TextField()
 	description = models.TextField(blank=True, null=True)
 	help_text = models.TextField(blank=True, null=True)
+
+	field_usage_display = models.TextField(blank=True, null=True)
 
 	def page_layout_usage(self):
 		return self.fieldusage_set.values_list('name', flat=True).filter(type='Page Layout').order_by('name')
