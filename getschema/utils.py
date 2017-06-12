@@ -5,7 +5,12 @@ from .models import FieldUsage
 import requests
 import json
 
+from xlsxwriter.workbook import Workbook
 
+try:
+    import cStringIO as StringIO
+except ImportError:
+    import StringIO
 
 def get_headers_for_schema(schema):
     return {
@@ -54,7 +59,7 @@ def get_usage_for_component(all_fields, schema, component_name):
         # Convert to json object
         record_json = record_result.json()
 
-        if 'FullName' in record_json:
+        if 'Name' in record_json and 'FullName' in record_json:
 
             # Iterate over each field to determine if it's included in a layout
             for field in all_fields:
@@ -167,3 +172,82 @@ def create_field_usage(field, type, name):
     field_usage.save()
 
 
+
+def create_excel_export(schema):
+    """
+    Build the Excel workbook for the list of fields
+    """
+
+    # Generate output string
+    output = StringIO.StringIO()
+
+    # Create workbook
+    book = Workbook(output, {'in_memory': True})
+
+    # Set up bold format
+    bold = book.add_format({'bold': True})
+
+    # List of unique names, as 31 characters is the limit for an object
+    # and the worksheets names must be unique
+    unique_names = []
+    unique_count = 1
+
+    # create a sheet for each object
+    for obj in schema.sorted_objects_api():
+
+        # strip api name
+        api_name = obj.api_name[:29]
+
+        # If the name exists 
+        if api_name in unique_names:
+
+            # Add count integer to name
+            api_name_unique = api_name + str(unique_count)
+
+            unique_count += 1
+
+        else:
+            api_name_unique = api_name
+
+        # add name to list
+        unique_names.append(api_name)
+
+        # Create sheet
+        sheet = book.add_worksheet(api_name_unique)    
+
+        # Write column headers
+        sheet.write(0, 0, 'Field Label', bold)
+        sheet.write(0, 1, 'API Name', bold)
+        sheet.write(0, 2, 'Type', bold)
+        sheet.write(0, 3, 'Help Text', bold)
+
+        # If the usage needs to be included, add the columns
+        if schema.include_field_usage:
+            sheet.write(0, 4, 'Page Layouts', bold)
+            sheet.write(0, 5, 'Workflows', bold)
+            sheet.write(0, 6, 'Field Updates', bold)
+            sheet.write(0, 7, 'Flows', bold)
+            sheet.write(0, 8, 'Email Templates', bold)
+            sheet.write(0, 9, 'Apex Classes', bold)
+            sheet.write(0, 10, 'Apex Triggers', bold)
+            sheet.write(0, 11, 'VisualForce Pages', bold)
+            sheet.write(0, 12, 'VisualForce Components', bold)
+
+
+        # Iterate over fields in object
+        for index, field in enumerate(obj.sorted_fields()):
+
+            # Set start row
+            row = index + 1
+
+            # Write fields to row
+            sheet.write(row, 0, field.label)
+            sheet.write(row, 1, field.api_name)
+            sheet.write(row, 2, field.data_type)
+            sheet.write(row, 3, field.help_text)
+
+            if schema.include_field_usage:
+                pass
+
+    # Close the book
+    book.close()

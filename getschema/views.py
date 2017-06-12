@@ -11,12 +11,8 @@ import requests
 import datetime
 from time import sleep
 import uuid
-from xlsxwriter.workbook import Workbook
 
-try:
-	import cStringIO as StringIO
-except ImportError:
-	import StringIO
+from . import utils
 
 def index(request):
 	
@@ -183,69 +179,7 @@ def export(request, schema_id):
 
 	try:
 
-		# Generate output string
-		output = StringIO.StringIO()
-
-		# Create workbook
-		book = Workbook(output, {'in_memory': True})
-
-		# Set up bold format
-		bold = book.add_format({'bold': True})
-
-		# List of unique names, as 31 characters is the limit for an object
-		# and the worksheets names must be unique
-		unique_names = []
-		unique_count = 1
-
-		# create a sheet for each object
-		for obj in schema.sorted_objects_api():
-
-			# strip api name
-			api_name = obj.api_name[:29]
-
-			# If the name exists 
-			if api_name in unique_names:
-
-				# Add count integer to name
-				api_name_unique = api_name + str(unique_count)
-
-				unique_count += 1
-
-			else:
-
-				api_name_unique = api_name
-
-			# add name to list
-			unique_names.append(api_name)
-
-			# Create sheet
-			sheet = book.add_worksheet(api_name_unique)	   
-
-			# Write column headers
-			sheet.write(0, 0, 'Field Label', bold)
-			sheet.write(0, 1, 'API Name', bold)
-			sheet.write(0, 2, 'Type', bold)
-			#sheet.write(0, 3, 'Description', bold)
-			sheet.write(0, 3, 'Help Text', bold)
-
-			# Iterate over fields in object
-			for index, field in enumerate(obj.sorted_fields()):
-
-				# Set start row
-				row = index + 1
-
-				# Write fields to row
-				sheet.write(row, 0, field.label)
-				sheet.write(row, 1, field.api_name)
-				sheet.write(row, 2, field.data_type)
-				#sheet.write(row, 3, field.description)
-				sheet.write(row, 3, field.help_text)
-
-		# Close the book
-		book.close()
-		
-		# construct response
-		output.seek(0)
+		output = utils.create_excel_export(schema)
 		
 		response = HttpResponse(output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 		response['Content-Disposition'] = "attachment; filename=schema.xlsx"
