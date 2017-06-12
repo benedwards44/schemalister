@@ -168,6 +168,9 @@ def get_objects_and_fields(schema):
 					# Get all layouts usage
 					utils.get_usage_layouts(all_fields, schema)
 
+					# Get all the workflows
+					utils.get_usage_workflows(all_fields, schema)
+
 
 					schema.status = 'Finished'
 
