@@ -252,7 +252,7 @@ def export(request, schema_id):
         book.close()
         
         response = HttpResponse(output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-        response['Content-Disposition'] = "attachment; filename=schema_%s.xlsx" % schema_id.org_id
+        response['Content-Disposition'] = "attachment; filename=schema_%s.xlsx" % schema.org_id
 
         return response
 
