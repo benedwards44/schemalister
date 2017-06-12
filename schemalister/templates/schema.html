@@ -2,26 +2,6 @@
 
 {% block content %}
 
-	<!--
-		Remove auto-delete. Database is cleared daily anyway.
-	<script>
-		$(document).ready(function() 
-		{
-			$.ajax({
-			    url: '/delete_schema/{{ schema.random_id }}/',
-			    type: 'get',
-			    success: function(resp) 
-			    {
-			        // Else do nothing. It will re-run in 5 seconds
-			    },
-			    failure: function(resp) 
-			    { 
-			        // Do nothing
-			    }
-			});
-		})
-	</script>
-	-->
 
 	<div class="{% if request.GET.noheader == '1' %}col-md-12{% else %}col-md-10 col-md-offset-1{% endif %}">
 
@@ -42,6 +22,12 @@
 			<p>
 				See the objects and fields printed below for the Org: <strong>{{ schema.org_name }}</strong> ({{ schema.org_id }}) <br/><br/>
 			</p>
+
+			{% if schema.include_field_usage %}
+				<div class="alert alert-info" role="alert">
+					<strong>Note: </strong>&nbsp;The Field Usage isn't entirely accurate for things like Apex and VisualForce. The field matching is based on whether or not the <em>field name only</em> exists in the content of the Apex or VisualForce. This means for a field that could be on multiple objects, the app will return that it appears in both objects. That's why fields like <strong>Id</strong> and <strong>Name</strong> will deceptively appear in a lot of code.
+				</div>
+			{% endif %}
 
 			<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 
