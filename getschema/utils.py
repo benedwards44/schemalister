@@ -247,7 +247,27 @@ def create_excel_export(schema):
             sheet.write(row, 3, field.help_text)
 
             if schema.include_field_usage:
-                pass
+                sheet.write(row, 4, field.page_layout_usage())
+                sheet.write(row, 5, field.workflow_usage())
+                sheet.write(row, 6, field.field_update_usage())
+                sheet.write(row, 7, field.flow_usage())
+                sheet.write(row, 8, field.email_template_usage())
+                sheet.write(row, 9, field.classes_usage())
+                sheet.write(row, 10, field.triggers_usage())
+                sheet.write(row, 11, field.components_usage())
+                sheet.write(row, 12, field.pages_usage())
 
     # Close the book
     book.close()
+
+
+def write_usage_to_cell(usage_list):
+    """
+    Take a cell and write the usage for that field to it
+    """
+    usage_cell = ''
+    if usage_list:
+        for usage in usage_list:
+            usage_cell += '- ' + usage.name
+    return usage_cell
+
