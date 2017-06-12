@@ -22,7 +22,8 @@ def get_urls_for_object(schema, object_name):
     if 'records' in records.json():
         # Iterate over the list of objects
         for record in records.json()['records']:
-            record_urls.append(record['attributes']['url'])
+            record_url = schema.instance_url + record['attributes']['url']
+            record_urls.append(record_url)
 
     return record_urls
 
