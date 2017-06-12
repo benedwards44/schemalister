@@ -229,9 +229,8 @@ def export(request, schema_id):
             sheet.write(0, 3, 'Help Text', bold)
 
             # If the usage needs to be included, add the columns
-            if schema.include_field_usage:
-                sheet.write(0, 4, 'Field Usage', bold)
-
+            #if schema.include_field_usage:
+            #    sheet.write(0, 4, 'Field Usage', bold)
 
             # Iterate over fields in object
             for index, field in enumerate(obj.sorted_fields()):
@@ -245,8 +244,8 @@ def export(request, schema_id):
                 sheet.write(row, 2, field.data_type)
                 sheet.write(row, 3, field.help_text)
 
-                if schema.include_field_usage:
-                    sheet.write(row, 4, field.field_usage_display_text)
+                #if schema.include_field_usage:
+                #    sheet.write(row, 4, field.field_usage_display_text)
 
         # Close the book
         book.close()
