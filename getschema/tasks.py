@@ -166,10 +166,11 @@ def get_objects_and_fields(schema):
 					all_fields = Field.objects.filter(object__schema=schema)
 
 					# Get all layouts usage
-					utils.get_usage_layouts(all_fields, schema)
+					utils.get_usage_for_component(all_fields, schema, 'Layout')
 
-					# Get all the workflows
-					utils.get_usage_workflows(all_fields, schema)
+					utils.get_usage_for_component(all_fields, schema, 'WorkflowRule')
+
+					utils.get_usage_for_component(all_fields, schema, 'WorkflowFieldUpdate')
 
 
 					schema.status = 'Finished'

@@ -33,23 +33,13 @@ def get_urls_for_object(schema, object_name):
     return record_urls
 
 
-
-
-def get_usage_layouts(all_fields, schema):
+def get_usage_for_component(all_fields, schema, component_name):
     """
-    Get all layout usage for the field
+    Get the usage for the specific component
     """
 
-    headers={
-        'Authorization': 'Bearer ' + schema.access_token, 
-        'content-type': 'application/json'
-    }
-
-    # Get a list of page layouts
-    record_urls = get_urls_for_object(schema, 'Layout')
-
-    # Get the metadatafor each laout
-    for url in record_urls:
+    # Get Metadata for each record for the component
+    for url in get_urls_for_object(schema, component_name):
 
         # Get the metadata for the layout
         record_result = requests.get(url, headers=get_headers_for_schema(schema))
@@ -62,54 +52,65 @@ def get_usage_layouts(all_fields, schema):
             # Iterate over each field to determine if it's included in a layout
             for field in all_fields:
 
-                layout_full_name = record_json['FullName']
-                layout_object_name = layout_full_name.split('-')[0]
+                # Get all required values
+                full_name = record_json['FullName']
+                object_name = get_object_name(full_name, component_name)
+                record_string = get_record_string(record_json, component_name)
 
-                # Convert all layout columns to a string
-                layout_fields_string = json.dumps(record_json['Metadata']['layoutSections'])
-
-                # If field object matches the layout object, and the field is in one of the columns
-                if field.object.api_name == layout_object_name and field.api_name in layout_fields_string:
-                    create_field_usage(field, 'Page Layout', record_json['Name'])
+                if field.object.api_name == object_name and field.api_name in record_string:
+                    create_field_usage(field, component_name, record_json['Name'])
 
 
 
-def get_usage_workflows(all_fields, schema):
+def get_object_name(full_name, component_name):
     """
-    Get all workflow usage
+    Returns the object name for the given Metadata component
+    """
+    if component_name == 'Layout':
+        return full_name.split('-')[0]
+    else:
+        return full_name.split('.')[0]
+
+
+
+def get_record_string(record_json, component_name):
+    """
+    Returns the record string to see if the field exists inside it
     """
 
-    # Get a list of page layouts
-    record_urls = get_urls_for_object(schema, 'WorkflowRule')
+    record_string = None
 
-    # Get the metadatafor each laout
-    for url in record_urls:
+    if component_name == 'Layout':
+        record_string = json.dumps(record_json['Metadata']['layoutSections'])
 
-        # Get the metadata for the layout
-        record_result = requests.get(url, headers=get_headers_for_schema(schema))
+    elif component_name == 'WorkflowRule':
+        if record_json['Metadata'].get('formula'):
+            record_string = record_json['Metadata'].get('formula')
+        else:
+            record_string = json.dumps(record_json['Metadata']['criteriaItems'])
 
-        # Convert to json object
-        record_json = record_result.json()
+    elif component_name == 'WorkflowFieldUpdate': 
+        record_string = json.dumps(record_json['Metadata'])
 
-        if 'FullName' in record_json:
+    return record_string
 
-            workflow_full_name = record_json['FullName']
-            workflow_object_name = workflow_full_name.split('.')[0]
-
-            # If a formula workflow
-            if record_json['Metadata'].get('formula'):
-                workflow_criteria_string = record_json['Metadata'].get('formula')
-            else:
-                workflow_criteria_string = json.dumps(record_json['Metadata']['criteriaItems'])
-
-            if field.object.api_name == workflow_object_name and field.api_name in workflow_criteria_string:
-                create_field_usage(field, 'Workflow', record_json['Name'])
 
 
 def create_field_usage(field, type, name):
+    """
+    Create the field usage record
+    """
+
+    component_type_to_name = {
+        'Layout': 'Page Layout',
+        'WorkflowRule': 'Workflow Rule',
+        'WorkflowFieldUpdate': 'Field Update'
+    }
 
     field_usage = FieldUsage()
     field_usage.field = field
-    field_usage.type = type
+    field_usage.type = component_type_to_name[type]
     field_usage.name = name
     field_usage.save()
+
+
