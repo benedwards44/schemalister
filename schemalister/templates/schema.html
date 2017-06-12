@@ -24,8 +24,11 @@
 			</p>
 
 			{% if schema.include_field_usage %}
-				<div class="alert alert-info" role="alert">
-					<strong>Note: </strong>&nbsp;The Field Usage isn't entirely accurate for things like Apex and VisualForce. The field matching is based on whether or not the <em>field name only</em> exists in the content of the Apex or VisualForce. This means for a field that could be on multiple objects, the app will return that it appears in both objects. That's why fields like <strong>Id</strong> and <strong>Name</strong> will deceptively appear in a lot of code.
+				<div class="alert alert-info alert-dismissible" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<strong>Note: </strong>&nbsp;The Field Usage isn't entirely accurate for things like Apex and VisualForce. The field matching is based on whether or not the <em>field name only</em> exists in the content of the Apex or VisualForce. This means for a field of the same API name that exists on multiple objects, the app will return that it appears in both objects. That's why fields like <strong>Id</strong> and <strong>Name</strong> will deceptively appear in a lot of code.
 				</div>
 			{% endif %}
 
