@@ -98,8 +98,8 @@ def get_record_string(record_json, component_name):
         record_string = json.dumps(record_json['Metadata'])
 
     elif component_name == 'EmailTemplate':
-        subject = record_json['Metadata'].get('subject','')
-        text_content = record_json['Metadata'].get('textOnly','')
+        subject = str(record_json['Metadata'].get('subject',''))
+        text_content = str(record_json['Metadata'].get('textOnly',''))
         record_string = subject + ' ' + text_content
 
     return record_string
