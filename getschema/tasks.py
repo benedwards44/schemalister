@@ -11,7 +11,6 @@ app = Celery('tasks', broker=os.environ.get('REDISTOGO_URL', 'redis://localhost'
 
 from getschema.models import Schema, Object, Field, Debug, FieldUsage
 from django.conf import settings
-from suds.client import Client
 from . import utils
 import json	
 import requests
