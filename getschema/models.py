@@ -37,6 +37,9 @@ class Field(models.Model):
 	description = models.TextField(blank=True, null=True)
 	help_text = models.TextField(blank=True, null=True)
 
+	def usages(self):
+		return self.fieldusage_set.all()
+
 
 class FieldUsage(models.Model):
 	"""

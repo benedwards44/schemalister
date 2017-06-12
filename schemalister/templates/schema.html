@@ -76,13 +76,13 @@
 
 					<thead>
 						<tr>
-							<th width="25%">Field Label</th>
-							<th width="25%">API Name</th>
-							<th width="25%">Type</th>
-							<!--
-							<th width="20%">Description</th>
-							-->
-							<th width="25%">Help Text</th>
+							<th width="{% if schema.include_field_usage %}20%{% else %}25%{% endif %}">Field Label</th>
+							<th width="{% if schema.include_field_usage %}20%{% else %}25%{% endif %}">API Name</th>
+							<th width="{% if schema.include_field_usage %}20%{% else %}25%{% endif %}">Type</th>
+							<th width="{% if schema.include_field_usage %}20%{% else %}25%{% endif %}">Help Text</th>
+							{% if schema.include_field_usage %}
+								<th width="20%">Field Usage</th>
+							{% endif %}
 						</tr>
 					</thead>
 
@@ -94,10 +94,14 @@
 							<td>{{ field.label }}</td>
 							<td>{{ field.api_name }}</td>
 							<td>{{ field.data_type|linebreaks }}</td>
-							<!--
-							<td>{% if field.description %}{{ field.description|linebreaks }}{% endif %}</td>
-							-->
 							<td>{% if field.help_text %}{{ field.help_text|linebreaks }}{% endif %}</td>
+							<td>
+								<ul>
+									{% for usage in usages %}
+										<li>{{ usage.name }}</li>
+									{% endfor %}
+								</ul>
+							</td>
 						</tr>
 
 					{% endfor %}
