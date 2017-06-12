@@ -96,19 +96,24 @@
 							<td>{{ field.data_type|linebreaks }}</td>
 							<td>{% if field.help_text %}{{ field.help_text|linebreaks }}{% endif %}</td>
 							<td>
-								<strong>Layouts</strong>
-								<ul class="no-padding-left">
-									{% for usage in field.page_layout_usage %}
-										<li>{{ usage.name }}</li>
-									{% endfor %}
-								</ul>
-								<br/>
-								<strong>Workflows</strong>
-								<ul class="no-padding-left">
-									{% for usage in field.workflow_usage %}
-										<li>{{ usage.name }}</li>
-									{% endfor %}
-								</ul>
+								{% if field.page_layout_usage %}
+									<strong>Layouts</strong>
+									<ul class="no-padding-left">
+										{% for usage in field.page_layout_usage %}
+											<li>{{ usage.name }}</li>
+										{% endfor %}
+									</ul>
+								{% endif %}
+
+								{% if field.workflow_usage %}
+									<br/>
+									<strong>Workflows</strong>
+									<ul class="no-padding-left">
+										{% for usage in field.workflow_usagex %}
+											<li>{{ usage.name }}</li>
+										{% endfor %}
+									</ul>
+								{% endif %}
 							</td>
 						</tr>
 
