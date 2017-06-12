@@ -179,21 +179,30 @@ def build_usage_display(all_fields):
 
     for field in all_fields:
 
-        usage_display = ''
-
-        usage_display = write_usage_to_field(usage_display, field.page_layout_usage(), 'Page Layouts')
-        usage_display = write_usage_to_field(usage_display, field.workflow_usage(), 'Workflows')
-        usage_display = write_usage_to_field(usage_display, field.field_update_usage(), 'Field Updates')
-        usage_display = write_usage_to_field(usage_display, field.flow_usage(), 'Flows')
-        usage_display = write_usage_to_field(usage_display, field.email_template_usage(), 'Email Templates')
-        usage_display = write_usage_to_field(usage_display, field.classes_usage(), 'Apex Classes')
-        usage_display = write_usage_to_field(usage_display, field.triggers_usage(), 'Apex Triggers')
-        usage_display = write_usage_to_field(usage_display, field.components_usage(), 'VisualForce Pages')
-        usage_display = write_usage_to_field(usage_display, field.pages_usage(), 'VisualForce Components')
-
         # Save to the field
-        field.field_usage_display = usage_display
+        field.field_usage_display = get_usage_display(field)
+        field.field_usage_display_text = get_usage_display(field, is_html=False)
         field.save()
+
+
+def get_usage_display(field, is_html=True):
+    """
+    Get the HTML content to display
+    """
+    usage_display = ''
+    usage_display = write_usage_to_field(usage_display, field.page_layout_usage(), 'Page Layouts', is_html)
+    usage_display = write_usage_to_field(usage_display, field.workflow_usage(), 'Workflows', is_html)
+    usage_display = write_usage_to_field(usage_display, field.field_update_usage(), 'Field Updates', is_html)
+    usage_display = write_usage_to_field(usage_display, field.flow_usage(), 'Flows', is_html)
+    usage_display = write_usage_to_field(usage_display, field.email_template_usage(), 'Email Templates', is_html)
+    usage_display = write_usage_to_field(usage_display, field.classes_usage(), 'Apex Classes', is_html)
+    usage_display = write_usage_to_field(usage_display, field.triggers_usage(), 'Apex Triggers', is_html)
+    usage_display = write_usage_to_field(usage_display, field.components_usage(), 'VisualForce Pages', is_html)
+    usage_display = write_usage_to_field(usage_display, field.pages_usage(), 'VisualForce Components', is_html)
+    return usage_display
+
+
+
 
 def create_excel_export(schema):
     """
@@ -245,15 +254,7 @@ def create_excel_export(schema):
 
         # If the usage needs to be included, add the columns
         if schema.include_field_usage:
-            sheet.write(0, 4, 'Page Layouts', bold)
-            sheet.write(0, 5, 'Workflows', bold)
-            sheet.write(0, 6, 'Field Updates', bold)
-            sheet.write(0, 7, 'Flows', bold)
-            sheet.write(0, 8, 'Email Templates', bold)
-            sheet.write(0, 9, 'Apex Classes', bold)
-            sheet.write(0, 10, 'Apex Triggers', bold)
-            sheet.write(0, 11, 'VisualForce Pages', bold)
-            sheet.write(0, 12, 'VisualForce Components', bold)
+            sheet.write(0, 4, 'Field Usage', bold)
 
 
         # Iterate over fields in object
@@ -269,15 +270,7 @@ def create_excel_export(schema):
             sheet.write(row, 3, field.help_text)
 
             if schema.include_field_usage:
-                sheet.write(row, 4, write_usage_to_cell(field.page_layout_usage()))
-                sheet.write(row, 5, write_usage_to_cell(field.workflow_usage()))
-                sheet.write(row, 6, write_usage_to_cell(field.field_update_usage()))
-                sheet.write(row, 7, write_usage_to_cell(field.flow_usage()))
-                sheet.write(row, 8, write_usage_to_cell(field.email_template_usage()))
-                sheet.write(row, 9, write_usage_to_cell(field.classes_usage()))
-                sheet.write(row, 10, write_usage_to_cell(field.triggers_usage()))
-                sheet.write(row, 11, write_usage_to_cell(field.components_usage()))
-                sheet.write(row, 12, write_usage_to_cell(field.pages_usage()))
+                sheet.write(row, 4, field.field_usage_display_text)
 
     # Close the book
     book.close()
@@ -298,16 +291,21 @@ def write_usage_to_cell(usage_list, is_html=False):
     return usage_cell
 
 
-def write_usage_to_field(usage_display, usage_list, label):
+def write_usage_to_field(usage_display, usage_list, label, is_html):
     """
     Build the list of usage for the display field
     """
 
     if usage_list:
-        usage_display += '<strong>%s</strong>\n' % label
-        usage_display += '<ul class="usage-list">\n'
-        usage_display += write_usage_to_cell(usage_list, is_html=True)
-        usage_display += '</ul>'
+
+        if is_html:
+            usage_display += '<strong>%s</strong>\n' % label
+            usage_display += '<ul class="usage-list">\n'
+            usage_display += write_usage_to_cell(usage_list, is_html=True)
+            usage_display += '</ul>'
+        else:
+            usage_display += label + '\n'
+            usage_display += write_usage_to_cell(usage_list, is_html=False)
 
     return usage_display
 
