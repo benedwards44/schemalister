@@ -5,12 +5,6 @@ from .models import FieldUsage
 import requests
 import json
 
-from xlsxwriter.workbook import Workbook
-
-try:
-    import cStringIO as StringIO
-except ImportError:
-    import StringIO
 
 def get_headers_for_schema(schema):
     return {
@@ -207,80 +201,6 @@ def get_usage_display(field, is_html=True):
     return usage_display
 
 
-
-
-def create_excel_export(schema):
-    """
-    Build the Excel workbook for the list of fields
-    """
-
-    # Generate output string
-    output = StringIO.StringIO()
-
-    # Create workbook
-    book = Workbook(output, {'in_memory': True})
-
-    # Set up bold format
-    bold = book.add_format({'bold': True})
-
-    # List of unique names, as 31 characters is the limit for an object
-    # and the worksheets names must be unique
-    unique_names = []
-    unique_count = 1
-
-    # create a sheet for each object
-    for obj in schema.sorted_objects_api():
-
-        # strip api name
-        api_name = obj.api_name[:29]
-
-        # If the name exists 
-        if api_name in unique_names:
-
-            # Add count integer to name
-            api_name_unique = api_name + str(unique_count)
-
-            unique_count += 1
-
-        else:
-            api_name_unique = api_name
-
-        # add name to list
-        unique_names.append(api_name)
-
-        # Create sheet
-        sheet = book.add_worksheet(api_name_unique)    
-
-        # Write column headers
-        sheet.write(0, 0, 'Field Label', bold)
-        sheet.write(0, 1, 'API Name', bold)
-        sheet.write(0, 2, 'Type', bold)
-        sheet.write(0, 3, 'Help Text', bold)
-
-        # If the usage needs to be included, add the columns
-        if schema.include_field_usage:
-            sheet.write(0, 4, 'Field Usage', bold)
-
-
-        # Iterate over fields in object
-        for index, field in enumerate(obj.sorted_fields()):
-
-            # Set start row
-            row = index + 1
-
-            # Write fields to row
-            sheet.write(row, 0, field.label)
-            sheet.write(row, 1, field.api_name)
-            sheet.write(row, 2, field.data_type)
-            sheet.write(row, 3, field.help_text)
-
-            if schema.include_field_usage:
-                sheet.write(row, 4, field.field_usage_display_text)
-
-    # Close the book
-    book.close()
-
-    return output
 
 
 def write_usage_to_cell(usage_list, is_html=False):
