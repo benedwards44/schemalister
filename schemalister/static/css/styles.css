@@ -121,3 +121,7 @@ a.object_link:hover {
 .info_icon {
     cursor:pointer;
 }
+
+.form-group {
+    margin-bottom: 0;
+}
