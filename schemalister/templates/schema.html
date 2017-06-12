@@ -97,7 +97,7 @@
 							<td>{% if field.help_text %}{{ field.help_text|linebreaks }}{% endif %}</td>
 							<td>
 								<ul>
-									{% for usage in usages %}
+									{% for usage in field.usages %}
 										<li>{{ usage.name }}</li>
 									{% endfor %}
 								</ul>
