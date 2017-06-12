@@ -37,6 +37,12 @@ class Field(models.Model):
 	description = models.TextField(blank=True, null=True)
 	help_text = models.TextField(blank=True, null=True)
 
+	def page_layout_usage(self):
+		return self.fieldusage_set.filter(type='Page Layout')
+
+	def workflow_usage(self):
+		return self.fieldusage_set.filter(type='Workflow')
+
 	def usages(self):
 		return self.fieldusage_set.all()
 

@@ -125,3 +125,7 @@ a.object_link:hover {
 .form-group {
     margin-bottom: 0;
 }
+
+.no-padding-left {
+    padding-left: 0;
+}
