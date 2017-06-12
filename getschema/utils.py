@@ -107,7 +107,7 @@ def get_field_name(field, component_name):
     """
     Get the field name to check for in the component
     """
-    if component_name == 'EmailTemplate'
+    if component_name == 'EmailTemplate':
         return '{!%s.%s}' % (field.object.api_name, field.api_name)
     return field.api_name
 
