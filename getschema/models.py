@@ -43,6 +43,12 @@ class Field(models.Model):
 	def workflow_usage(self):
 		return self.fieldusage_set.filter(type='Workflow')
 
+	def field_update_usage(self):
+		return self.fieldusage_set.filter(type='Field Update')
+
+	def email_template_usage(self):
+		return self.fieldusage_set.filter(type='Email Template')
+
 	def usages(self):
 		return self.fieldusage_set.all()
 
@@ -57,6 +63,7 @@ class FieldUsage(models.Model):
 	TYPE_CHOICES = (
 		('Apex Class', 'Apex Class'),
 		('Apex Trigger', 'Apex Trigger'),
+		('Email Template', 'Email Template'),
 		('Field Update', 'Field Update'),
 		('Page Layout', 'Page Layout'),
 		('Process Flow', 'Process Flow'),

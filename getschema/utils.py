@@ -58,8 +58,10 @@ def get_usage_for_component(all_fields, schema, component_name):
                 full_name = record_json['FullName']
                 object_name = get_object_name(full_name, component_name)
                 record_string = get_record_string(record_json, component_name)
+                field_name = get_field_name(field, component_name)
 
-                if field.object.api_name == object_name and field.api_name in record_string:
+                # See if the field exists in the metadata
+                if (field.object.api_name == object_name or not object_name) and field_name in record_string:
                     create_field_usage(field, component_name, record_json['Name'])
 
 
@@ -70,8 +72,9 @@ def get_object_name(full_name, component_name):
     """
     if component_name == 'Layout':
         return full_name.split('-')[0]
-    else:
+    elif component_name in ['WorkflowRule','WorkflowFieldUpdate']:
         return full_name.split('.')[0]
+    return None
 
 
 
@@ -94,7 +97,19 @@ def get_record_string(record_json, component_name):
     elif component_name == 'WorkflowFieldUpdate': 
         record_string = json.dumps(record_json['Metadata'])
 
+    elif component_name == 'EmailTemplate':
+        record_string = record_json.get('Subject','') + ' ' + record_json['Metadata'].get('textOnly','')
+
     return record_string
+
+
+def get_field_name(field, component_name):
+    """
+    Get the field name to check for in the component
+    """
+    if component_name == 'EmailTemplate'
+        return '{!%s.%s}' % (field.object.api_name, field.api_name)
+    return field.api_name
 
 
 
@@ -104,8 +119,9 @@ def create_field_usage(field, type, name):
     """
 
     component_type_to_name = {
+        'EmailTemplate': 'Email Template',
         'Layout': 'Page Layout',
-        'WorkflowRule': 'Workflow Rule',
+        'WorkflowRule': 'Workflow',
         'WorkflowFieldUpdate': 'Field Update'
     }
 

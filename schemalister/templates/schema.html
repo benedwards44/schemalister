@@ -109,7 +109,27 @@
 									<br/>
 									<strong>Workflows</strong>
 									<ul class="no-padding-left">
-										{% for usage in field.workflow_usagex %}
+										{% for usage in field.workflow_usage %}
+											<li>{{ usage.name }}</li>
+										{% endfor %}
+									</ul>
+								{% endif %}
+
+								{% if field.field_update_usage %}
+									<br/>
+									<strong>Field Updates</strong>
+									<ul class="no-padding-left">
+										{% for usage in field.field_update_usage %}
+											<li>{{ usage.name }}</li>
+										{% endfor %}
+									</ul>
+								{% endif %}
+
+								{% if field.email_template_usage %}
+									<br/>
+									<strong>Email Templates</strong>
+									<ul class="no-padding-left">
+										{% for usage in field.email_template_usage %}
 											<li>{{ usage.name }}</li>
 										{% endfor %}
 									</ul>

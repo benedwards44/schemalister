@@ -172,6 +172,7 @@ def get_objects_and_fields(schema):
 
 					utils.get_usage_for_component(all_fields, schema, 'WorkflowFieldUpdate')
 
+					utils.get_usage_for_component(all_fields, schema, 'EmailTemplate')
 
 					schema.status = 'Finished'
 
