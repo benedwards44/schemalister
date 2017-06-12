@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Schema(models.Model):
 	random_id = models.CharField(db_index=True,max_length=255, blank=True)
 	created_date = models.DateTimeField(null=True,blank=True)
@@ -9,6 +10,7 @@ class Schema(models.Model):
 	username = models.CharField(max_length=255, blank=True)
 	access_token = models.CharField(max_length=255, blank=True)
 	instance_url = models.CharField(max_length=255, blank=True)
+	include_field_usage = models.BooleanField(default=False)
 	status = models.CharField(max_length=255, blank=True)
 	error = models.TextField(blank=True)
 
@@ -26,6 +28,7 @@ class Object(models.Model):
 	def sorted_fields(self):
 		return self.field_set.order_by('label')
 
+
 class Field(models.Model):
 	object = models.ForeignKey(Object)
 	label = models.CharField(max_length=255)
@@ -33,6 +36,29 @@ class Field(models.Model):
 	data_type = models.TextField()
 	description = models.TextField(blank=True, null=True)
 	help_text = models.TextField(blank=True, null=True)
+
+
+class FieldUsage(models.Model):
+	"""
+	Captures each location that the field is used in
+	"""
+
+	field = models.ForeignKey(Field)
+
+	TYPE_CHOICES = (
+		('Apex Class', 'Apex Class'),
+		('Apex Trigger', 'Apex Trigger'),
+		('Field Update', 'Field Update'),
+		('Page Layout', 'Page Layout'),
+		('Process Flow', 'Process Flow'),
+		('VisualForce Component', 'VisualForce Component'),
+		('VisualForce Page', 'VisualForce Page'),
+		('Workflow', 'Workflow'),
+	)
+
+	type = models.CharField(max_length=50, choices=TYPE_CHOICES)
+	name = models.CharField(max_length=255)
+
 
 class Debug(models.Model):
 	debug = models.TextField()

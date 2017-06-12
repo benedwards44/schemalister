@@ -6,3 +6,4 @@ class LoginForm(forms.Form):
 	access_token = forms.CharField(required=False)
 	instance_url = forms.CharField(required=False)
 	org_id = forms.CharField(required=False)
+	include_field_usage = forms.BooleanField(default=False)
