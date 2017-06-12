@@ -280,6 +280,8 @@ def create_excel_export(schema):
     # Close the book
     book.close()
 
+    return output
+
 
 def write_usage_to_cell(usage_list, is_html=False):
     """
