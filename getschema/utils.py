@@ -105,31 +105,36 @@ def get_record_string(record_json, component_name):
 
     record_string = None
 
-    if component_name == 'Layout':
-        record_string = json.dumps(record_json['Metadata']['layoutSections'])
+    try:
 
-    elif component_name == 'WorkflowRule':
-        if record_json['Metadata'].get('formula'):
-            record_string = record_json['Metadata'].get('formula')
-        else:
-            record_string = json.dumps(record_json['Metadata']['criteriaItems'])
+        if component_name == 'Layout':
+            record_string = json.dumps(record_json['Metadata']['layoutSections'])
 
-    elif component_name == 'WorkflowFieldUpdate': 
-        record_string = json.dumps(record_json['Metadata'])
+        elif component_name == 'WorkflowRule':
+            if record_json['Metadata'].get('formula'):
+                record_string = record_json['Metadata'].get('formula')
+            else:
+                record_string = json.dumps(record_json['Metadata']['criteriaItems'])
 
-    elif component_name == 'EmailTemplate':
-        subject = str(record_json['Metadata'].get('subject',''))
-        text_content = str(record_json['Metadata'].get('textOnly',''))
-        record_string = subject + ' ' + text_content
+        elif component_name == 'WorkflowFieldUpdate': 
+            record_string = json.dumps(record_json['Metadata'])
 
-    elif component_name == 'Flow':
-        record_string = json.dumps(record_json['Metadata'])
+        elif component_name == 'EmailTemplate':
+            subject = str(record_json['Metadata'].get('subject',''))
+            text_content = str(record_json['Metadata'].get('textOnly',''))
+            record_string = subject + ' ' + text_content
 
-    elif component_name in ['ApexClass', 'ApexTrigger']:
-        record_string = record_json.get('Body','')
+        elif component_name == 'Flow':
+            record_string = json.dumps(record_json['Metadata'])
 
-    elif component_name in ['ApexPage','ApexComponent']:
-        record_string = record_json.get('Markup','')
+        elif component_name in ['ApexClass', 'ApexTrigger']:
+            record_string = record_json.get('Body','')
+
+        elif component_name in ['ApexPage','ApexComponent']:
+            record_string = record_json.get('Markup','')
+
+    except:
+        pass
 
     return record_string
 
