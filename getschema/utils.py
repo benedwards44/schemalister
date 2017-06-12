@@ -19,7 +19,7 @@ def get_urls_for_object(schema, object_name):
 
     records = requests.get(
         schema.instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/tooling/query/?q=SELECT+Id+FROM+' + object_name, 
-        headers=get_headers_for_schema()
+        headers=get_headers_for_schema(schema)
     )
 
     record_urls = []
@@ -52,7 +52,7 @@ def get_usage_layouts(all_fields, schema):
     for url in record_urls:
 
         # Get the metadata for the layout
-        record_result = requests.get(url, headers=get_headers_for_schema())
+        record_result = requests.get(url, headers=get_headers_for_schema(schema))
 
         # Convert to json object
         record_json = record_result.json()
@@ -86,7 +86,7 @@ def get_usage_workflows(all_fields, schema):
     for url in record_urls:
 
         # Get the metadata for the layout
-        record_result = requests.get(url, headers=get_headers_for_schema())
+        record_result = requests.get(url, headers=get_headers_for_schema(schema))
 
         # Convert to json object
         record_json = record_result.json()
