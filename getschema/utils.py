@@ -4,6 +4,14 @@ import requests
 import json
 
 
+
+def get_headers_for_schema(schema):
+    return {
+        'Authorization': 'Bearer ' + schema.access_token, 
+        'Content-Type': 'application/json'
+    }
+
+
 def get_urls_for_object(schema, object_name):
     """
     For a given object type, get the list of describe URLs
@@ -11,10 +19,7 @@ def get_urls_for_object(schema, object_name):
 
     records = requests.get(
         schema.instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/tooling/query/?q=SELECT+Id+FROM+' + object_name, 
-        headers={
-            'Authorization': 'Bearer ' + schema.access_token, 
-            'content-type': 'application/json'
-        }
+        headers=get_headers_for_schema()
     )
 
     record_urls = []
@@ -35,6 +40,11 @@ def get_usage_layouts(all_fields, schema):
     Get all layout usage for the field
     """
 
+    headers={
+        'Authorization': 'Bearer ' + schema.access_token, 
+        'content-type': 'application/json'
+    }
+
     # Get a list of page layouts
     record_urls = get_urls_for_object(schema, 'Layout')
 
@@ -42,7 +52,7 @@ def get_usage_layouts(all_fields, schema):
     for url in record_urls:
 
         # Get the metadata for the layout
-        record_result = requests.get(url, headers=headers)
+        record_result = requests.get(url, headers=get_headers_for_schema())
 
         # Convert to json object
         record_json = record_result.json()
@@ -75,8 +85,8 @@ def get_usage_workflows(all_fields, schema):
     # Get the metadatafor each laout
     for url in record_urls:
 
-         # Get the metadata for the layout
-        record_result = requests.get(url, headers=headers)
+        # Get the metadata for the layout
+        record_result = requests.get(url, headers=get_headers_for_schema())
 
         # Convert to json object
         record_json = record_result.json()
