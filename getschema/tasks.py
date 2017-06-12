@@ -173,6 +173,16 @@ def get_objects_and_fields(schema):
 
 					utils.get_usage_for_component(all_fields, schema, 'EmailTemplate')
 
+					utils.get_usage_for_component(all_fields, schema, 'Flow')
+
+					utils.get_usage_for_component(all_fields, schema, 'ApexClass')
+
+					utils.get_usage_for_component(all_fields, schema, 'ApexComponent')
+
+					utils.get_usage_for_component(all_fields, schema, 'ApexPage')
+
+					utils.get_usage_for_component(all_fields, schema, 'ApexTrigger')
+
 					schema.status = 'Finished'
 
 				except Exception as error:

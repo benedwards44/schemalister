@@ -1,0 +1,11 @@
+{% if usage_list %}
+	{% if usage_list.0.type != 'Page Layout' %}
+	<br/>
+	{% endif %}
+	<strong>{{ usage_list.0.type_plural }}</strong>
+	<ul class="no-padding-left">
+		{% for usage in usage_list %}
+			<li>{{ usage.name }}</li>
+		{% endfor %}
+	</ul>
+{% endif %}

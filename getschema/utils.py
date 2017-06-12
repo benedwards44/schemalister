@@ -19,8 +19,13 @@ def get_urls_for_object(schema, object_name):
     For a given object type, get the list of describe URLs
     """
 
+    url = schema.instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/tooling/query/?q=SELECT+Id+FROM+' + object_name
+
+    if object_name in ['ApexClass','ApexPage','ApexComponent','ApexTrigger']:
+        url += '+WHERE+NamespacePrefix=null'
+
     records = requests.get(
-        schema.instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/tooling/query/?q=SELECT+Id+FROM+' + object_name, 
+        url, 
         headers=get_headers_for_schema(schema)
     )
 
@@ -56,7 +61,7 @@ def get_usage_for_component(all_fields, schema, component_name):
 
                 # Get all required values
                 full_name = record_json['FullName']
-                object_name = get_object_name(full_name, component_name)
+                object_name = get_object_name(full_name, component_name, record_json)
                 record_string = get_record_string(record_json, component_name)
                 field_name = get_field_name(field, component_name)
 
@@ -66,15 +71,25 @@ def get_usage_for_component(all_fields, schema, component_name):
 
 
 
-def get_object_name(full_name, component_name):
+def get_object_name(full_name, component_name, record_json):
     """
     Returns the object name for the given Metadata component
     """
+    object_name = None
+
     if component_name == 'Layout':
-        return full_name.split('-')[0]
+        object_name = full_name.split('-')[0]
+
     elif component_name in ['WorkflowRule','WorkflowFieldUpdate']:
-        return full_name.split('.')[0]
-    return None
+        object_name = full_name.split('.')[0]
+
+    elif component_name == 'Flow':
+        object_name = record_json.get('Metadata').get('processMetadataValues')[0].get('value').get('stringValue')
+
+    elif component_name == 'ApexTrigger':
+        object_name = record_json.get('TableEnumOrId', None)
+
+    return object_name
 
 
 
@@ -102,6 +117,15 @@ def get_record_string(record_json, component_name):
         text_content = str(record_json['Metadata'].get('textOnly',''))
         record_string = subject + ' ' + text_content
 
+    elif component_name == 'Flow':
+        record_string = json.dumps(record_json['Metadata'])
+
+    elif component_name in ['ApexClass', 'ApexTrigger']:
+        record_string = record_json.get('Body','')
+
+    elif component_name in ['ApexPage','ApexComponent']:
+        record_string = record_json.get('Markup','')
+
     return record_string
 
 
@@ -110,7 +134,11 @@ def get_field_name(field, component_name):
     Get the field name to check for in the component
     """
     if component_name == 'EmailTemplate':
+        # Eg {!Contact.FirstName}
         return '{!%s.%s}' % (field.object.api_name, field.api_name)
+    elif component_name in ['ApexClass','ApexComponent','ApexPage','ApexTrigger']:
+        # Prepend field names with a . to isolate anything that could be a field. Eg. Account.Name 
+        return '.%s' % field.api_name
     return field.api_name
 
 
@@ -121,7 +149,12 @@ def create_field_usage(field, type, name):
     """
 
     component_type_to_name = {
+        'ApexClass': 'Apex Class',
+        'ApexComponent': 'VisualForce Component',
+        'ApexTrigger': 'Apex Trigger',
+        'ApexPage': 'VisualForce Page',
         'EmailTemplate': 'Email Template',
+        'Flow': 'Flow',
         'Layout': 'Page Layout',
         'WorkflowRule': 'Workflow',
         'WorkflowFieldUpdate': 'Field Update'

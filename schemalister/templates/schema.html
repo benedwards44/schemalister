@@ -96,44 +96,23 @@
 							<td>{{ field.data_type|linebreaks }}</td>
 							<td>{% if field.help_text %}{{ field.help_text|linebreaks }}{% endif %}</td>
 							<td>
-								{% if field.page_layout_usage %}
-									<strong>Layouts</strong>
-									<ul class="no-padding-left">
-										{% for usage in field.page_layout_usage %}
-											<li>{{ usage.name }}</li>
-										{% endfor %}
-									</ul>
-								{% endif %}
+								{% include 'snippets/usage_list.html' with usage_list=field.page_layout_usage %}
 
-								{% if field.workflow_usage %}
-									<br/>
-									<strong>Workflows</strong>
-									<ul class="no-padding-left">
-										{% for usage in field.workflow_usage %}
-											<li>{{ usage.name }}</li>
-										{% endfor %}
-									</ul>
-								{% endif %}
+								{% include 'snippets/usage_list.html' with usage_list=field.workflow_usage %}
 
-								{% if field.field_update_usage %}
-									<br/>
-									<strong>Field Updates</strong>
-									<ul class="no-padding-left">
-										{% for usage in field.field_update_usage %}
-											<li>{{ usage.name }}</li>
-										{% endfor %}
-									</ul>
-								{% endif %}
+								{% include 'snippets/usage_list.html' with usage_list=field.field_update_usage %}
 
-								{% if field.email_template_usage %}
-									<br/>
-									<strong>Email Templates</strong>
-									<ul class="no-padding-left">
-										{% for usage in field.email_template_usage %}
-											<li>{{ usage.name }}</li>
-										{% endfor %}
-									</ul>
-								{% endif %}
+								{% include 'snippets/usage_list.html' with usage_list=field.email_template_usage %}
+
+								{% include 'snippets/usage_list.html' with usage_list=field.flow_usage %}
+
+								{% include 'snippets/usage_list.html' with usage_list=field.classes_usage %}
+
+								{% include 'snippets/usage_list.html' with usage_list=field.triggers_usage %}
+
+								{% include 'snippets/usage_list.html' with usage_list=field.components_usage %}
+
+								{% include 'snippets/usage_list.html' with usage_list=field.pages_usage %}
 							</td>
 						</tr>
 

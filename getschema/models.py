@@ -49,6 +49,21 @@ class Field(models.Model):
 	def email_template_usage(self):
 		return self.fieldusage_set.filter(type='Email Template')
 
+	def flow_usage(self):
+		return self.fieldusage_set.filter(type='Flow')
+
+	def classes_usage(self):
+		return self.fieldusage_set.filter(type='Apex Class')
+
+	def triggers_usage(self):
+		return self.fieldusage_set.filter(type='Apex Trigger')
+
+	def components_usage(self):
+		return self.fieldusage_set.filter(type='VisualForce Component')
+
+	def pages_usage(self):
+		return self.fieldusage_set.filter(type='VisualForce Page')
+
 	def usages(self):
 		return self.fieldusage_set.all()
 
@@ -66,7 +81,7 @@ class FieldUsage(models.Model):
 		('Email Template', 'Email Template'),
 		('Field Update', 'Field Update'),
 		('Page Layout', 'Page Layout'),
-		('Process Flow', 'Process Flow'),
+		('Flow', 'Flow'),
 		('VisualForce Component', 'VisualForce Component'),
 		('VisualForce Page', 'VisualForce Page'),
 		('Workflow', 'Workflow'),
@@ -74,6 +89,11 @@ class FieldUsage(models.Model):
 
 	type = models.CharField(max_length=50, choices=TYPE_CHOICES)
 	name = models.CharField(max_length=255)
+
+	def type_plural(self):
+		if self.type == 'Apex Classes':
+			return self.type + 'es'
+		return self.type + 's'
 
 
 class Debug(models.Model):
