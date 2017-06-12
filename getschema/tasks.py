@@ -177,23 +177,25 @@ def get_objects_and_fields(schema):
 						# Convert to json object
 						layout_json = layout_result.json()
 
-						# Iterate over each field to determine if it's included in a layout
-						for field in all_fields:
+						if 'FullName' in layout_json:
 
-							layout_full_name = layout_json['FullName']
-							layout_object_name = layout_full_name.split('-')[0]
+							# Iterate over each field to determine if it's included in a layout
+							for field in all_fields:
 
-							# Convert all layout columns to a string
-							layout_fields_string = json.dumps(layout_json['Metadata']['layoutSections'])
+								layout_full_name = layout_json['FullName']
+								layout_object_name = layout_full_name.split('-')[0]
 
-							# If field object matches the layout object, and the field is in one of the columns
-							if field.object.api_name == layout_object_name and field.api_name in layout_fields_string:
+								# Convert all layout columns to a string
+								layout_fields_string = json.dumps(layout_json['Metadata']['layoutSections'])
 
-								field_usage = FieldUsage()
-								field_usage.field = field
-								field_usage.type = 'Page Layout'
-								field_usage.name = layout_full_name
-								field_usage.save()
+								# If field object matches the layout object, and the field is in one of the columns
+								if field.object.api_name == layout_object_name and field.api_name in layout_fields_string:
+
+									field_usage = FieldUsage()
+									field_usage.field = field
+									field_usage.type = 'Page Layout'
+									field_usage.name = layout_full_name
+									field_usage.save()
 
 
 					schema.status = 'Finished'
