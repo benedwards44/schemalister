@@ -1,5 +1,7 @@
 from django.conf import settings
 
+from .models import FieldUsage
+
 import requests
 import json
 
