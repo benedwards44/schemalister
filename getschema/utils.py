@@ -231,6 +231,8 @@ def write_usage_to_field(usage_display, usage_list, label, is_html):
             usage_display += write_usage_to_cell(usage_list, is_html=True)
             usage_display += '</ul>'
         else:
+            if label != 'Page Layouts':
+                usage_display += '\n'
             usage_display += label + '\n'
             usage_display += write_usage_to_cell(usage_list, is_html=False)
 

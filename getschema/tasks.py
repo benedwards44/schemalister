@@ -94,10 +94,17 @@ def get_objects_and_fields(schema):
 					# Loop through fields
 					for field in object_describe.json()['fields']:
 
+						# Get the field name
+						field_name = field['name']
+
+						# Skip field if it's managed
+						if not schema.include_managed_objects and field_name.count('__') > 1:
+							continue
+
 						# Create field
 						new_field = Field()
 						new_field.object = new_object
-						new_field.api_name = field['name']
+						new_field.api_name = field_name
 						new_field.label = field['label']
 
 						if 'inlineHelpText' in field:
