@@ -7,3 +7,4 @@ class LoginForm(forms.Form):
 	instance_url = forms.CharField(required=False)
 	org_id = forms.CharField(required=False)
 	include_field_usage = forms.BooleanField(required=False)
+	include_managed_objects = forms.BooleanField(required=False)

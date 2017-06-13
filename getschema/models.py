@@ -11,6 +11,7 @@ class Schema(models.Model):
 	access_token = models.CharField(max_length=255, blank=True)
 	instance_url = models.CharField(max_length=255, blank=True)
 	include_field_usage = models.BooleanField(default=False)
+	include_managed_objects = models.BooleanField(default=False)
 	status = models.CharField(max_length=255, blank=True)
 	error = models.TextField(blank=True)
 

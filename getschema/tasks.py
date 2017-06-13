@@ -72,7 +72,14 @@ def get_objects_and_fields(schema):
 
 			for sObject in all_objects.json()['sobjects']:
 
-				if sObject['name'] in standard_objects or sObject['name'].endswith('__c'):
+				object_name = sObject['name']
+
+				if object_name in standard_objects or sObject['name'].endswith('__c'):
+
+					# Skip managed package objects if we don't want them
+					# Counting to see if "__" appears twice in the object name.
+					if not schema.include_managed_objects and object_name.count('__') > 1:
+						continue
 
 					# Create object record
 					new_object = Object()
@@ -82,10 +89,10 @@ def get_objects_and_fields(schema):
 					new_object.save()
 
 					# query for fields in the object
-					all_fields = requests.get(instance_url + sObject['urls']['describe'], headers={'Authorization': 'Bearer ' + access_token, 'content-type': 'application/json'})
+					object_describe = requests.get(instance_url + sObject['urls']['describe'], headers={'Authorization': 'Bearer ' + access_token, 'content-type': 'application/json'})
 
 					# Loop through fields
-					for field in all_fields.json()['fields']:
+					for field in object_describe.json()['fields']:
 
 						# Create field
 						new_field = Field()

@@ -115,6 +115,7 @@ def oauth_response(request):
                 schema.access_token = access_token
                 schema.instance_url = instance_url
                 schema.include_field_usage = login_form.cleaned_data['include_field_usage']
+                schema.include_managed_objects = login_form.cleaned_data['include_managed_objects']
                 schema.status = 'Running'
                 schema.save()
 
