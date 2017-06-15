@@ -79,7 +79,7 @@ def get_object_name(full_name, component_name, record_json):
     if component_name == 'Layout':
         object_name = full_name.split('-')[0]
 
-    elif component_name in ['WorkflowRule','WorkflowFieldUpdate']:
+    elif component_name in ['WorkflowRule','WorkflowFieldUpdate','WorkflowOutboundMessage']:
         object_name = full_name.split('.')[0]
 
     elif component_name == 'Flow':
@@ -112,6 +112,9 @@ def get_record_string(record_json, component_name):
 
         elif component_name == 'WorkflowFieldUpdate': 
             record_string = json.dumps(record_json['Metadata'])
+
+        elif component_name == 'WorkflowOutboundMessage':
+            record_string = json.dumps(record_json['Metadata']['fields'])
 
         elif component_name == 'EmailTemplate':
             subject = str(record_json['Metadata'].get('subject',''))
@@ -161,7 +164,8 @@ def create_field_usage(field, type, name):
         'Flow': 'Flow',
         'Layout': 'Page Layout',
         'WorkflowRule': 'Workflow',
-        'WorkflowFieldUpdate': 'Field Update'
+        'WorkflowFieldUpdate': 'Field Update',
+        'WorkflowOutboundMessage': 'Outbound Message'
     }
 
     field_usage = FieldUsage()
@@ -192,6 +196,7 @@ def get_usage_display(field, is_html=True):
     usage_display = write_usage_to_field(usage_display, field.page_layout_usage(), 'Page Layouts', is_html)
     usage_display = write_usage_to_field(usage_display, field.workflow_usage(), 'Workflows', is_html)
     usage_display = write_usage_to_field(usage_display, field.field_update_usage(), 'Field Updates', is_html)
+    usage_display = write_usage_to_field(usage_display, field.outbound_messages_usage(), 'Outbound Messages', is_html)
     usage_display = write_usage_to_field(usage_display, field.flow_usage(), 'Flows', is_html)
     usage_display = write_usage_to_field(usage_display, field.email_template_usage(), 'Email Templates', is_html)
     usage_display = write_usage_to_field(usage_display, field.classes_usage(), 'Apex Classes', is_html)

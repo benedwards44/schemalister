@@ -50,6 +50,9 @@ class Field(models.Model):
 	def field_update_usage(self):
 		return self.fieldusage_set.values_list('name', flat=True).filter(type='Field Update').order_by('name')
 
+	def outbound_messages_usage(self):
+		return self.fieldusage_set.values_list('name', flat=True).filter(type='Outbound Message').order_by('name')
+
 	def email_template_usage(self):
 		return self.fieldusage_set.values_list('name', flat=True).filter(type='Email Template').order_by('name')
 
@@ -86,6 +89,7 @@ class FieldUsage(models.Model):
 		('Field Update', 'Field Update'),
 		('Page Layout', 'Page Layout'),
 		('Flow', 'Flow'),
+		('Outbound Message', 'Outbound Message'),
 		('VisualForce Component', 'VisualForce Component'),
 		('VisualForce Page', 'VisualForce Page'),
 		('Workflow', 'Workflow'),
