@@ -65,10 +65,11 @@
 
 					<thead>
 						<tr>
-							<th width="{% if schema.include_field_usage %}20%{% else %}25%{% endif %}">Field Label</th>
-							<th width="{% if schema.include_field_usage %}20%{% else %}25%{% endif %}">API Name</th>
-							<th width="{% if schema.include_field_usage %}20%{% else %}25%{% endif %}">Type</th>
-							<th width="{% if schema.include_field_usage %}20%{% else %}25%{% endif %}">Help Text</th>
+							<th width="{% if schema.include_field_usage %}15%{% else %}20%{% endif %}">Field Label</th>
+							<th width="{% if schema.include_field_usage %}15%{% else %}20%{% endif %}">API Name</th>
+							<th width="{% if schema.include_field_usage %}15%{% else %}20%{% endif %}">Type</th>
+							<th width="{% if schema.include_field_usage %}15%{% else %}20%{% endif %}">Help Text</th>
+							<th width="{% if schema.include_field_usage %}20%{% else %}20%{% endif %}">Formula</th>
 							{% if schema.include_field_usage %}
 								<th width="20%">Field Usage</th>
 							{% endif %}
@@ -83,6 +84,7 @@
 							<td>{{ field.api_name }}</td>
 							<td>{{ field.data_type|linebreaks }}</td>
 							<td>{% if field.help_text %}{{ field.help_text|linebreaks }}{% endif %}</td>
+							<td>{{ field.formula|linebreaks }}</td>
 							<td>{{ field.field_usage_display|safe }}</td>
 						</tr>
 					{% endfor %}

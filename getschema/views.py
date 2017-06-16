@@ -228,10 +228,11 @@ def export(request, schema_id):
             sheet.write(0, 1, 'API Name', bold)
             sheet.write(0, 2, 'Type', bold)
             sheet.write(0, 3, 'Help Text', bold)
+            sheet.write(0, 4, 'Formula', bold)
 
             # If the usage needs to be included, add the columns
             if schema.include_field_usage:
-                sheet.write(0, 4, 'Field Usage', bold)
+                sheet.write(0, 5, 'Field Usage', bold)
 
             # Iterate over fields in object
             for index, field in enumerate(obj.sorted_fields()):
@@ -244,9 +245,10 @@ def export(request, schema_id):
                 sheet.write(row, 1, field.api_name)
                 sheet.write(row, 2, field.data_type)
                 sheet.write(row, 3, field.help_text)
+                sheet.write(row, 4, field.formula)
 
                 if schema.include_field_usage:
-                    sheet.write(row, 4, field.field_usage_display_text)
+                    sheet.write(row, 5, field.field_usage_display_text)
 
         # Close the book
         book.close()
