@@ -87,7 +87,7 @@
 							<td>{{ field.api_name }}</td>
 							<td>{{ field.data_type|linebreaks }}</td>
 							<td>{% if field.help_text %}{{ field.help_text|linebreaks }}{% endif %}</td>
-							<td>{{ field.formula|linebreaks|default:"" }}</td>
+							<td>{{ field.formula|default_if_none:""|linebreaks }}</td>
 							{% if schema.include_field_usage %}
 								<td>{{ field.field_usage_display|safe }}</td>
 							{% endif %}
