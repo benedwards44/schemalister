@@ -15,6 +15,10 @@ from . import utils
 import json	
 import requests
 
+
+
+
+
 @app.task
 def get_objects_and_fields(schema): 
 
@@ -122,6 +126,11 @@ def get_objects_and_fields(schema):
 							new_field.data_type = new_field.data_type[:-2]
 							new_field.data_type = new_field.data_type + ')'
 
+						# Formula field
+						elif field['calculated']:
+							new_field.data_type = 'Formula (' + FIELD_TYPES.get(field['type'], field['type'].title()) + ')'
+							new_field.formula = field.get('calculatedFormula')
+
 						# picklist values
 						elif field['type'] == 'picklist' or field['type'] == 'multipicklist':
 							new_field.data_type = field['type'].title() + ' ('
@@ -227,3 +236,10 @@ def get_objects_and_fields(schema):
 	schema.save()
 
 	return str(schema.id)
+
+
+FIELD_TYPES = {
+	'boolean': 'Checkbox',
+	'int': 'Number',
+	'string': 'Text'
+}

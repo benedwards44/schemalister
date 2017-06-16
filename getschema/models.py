@@ -37,6 +37,7 @@ class Field(models.Model):
 	data_type = models.TextField()
 	description = models.TextField(blank=True, null=True)
 	help_text = models.TextField(blank=True, null=True)
+	formula = models.TextField(blank=True, null=True)
 
 	field_usage_display = models.TextField(blank=True, null=True)
 	field_usage_display_text = models.TextField(blank=True, null=True)
