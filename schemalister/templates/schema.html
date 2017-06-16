@@ -3,7 +3,7 @@
 {% block content %}
 
 
-	<div class="{% if request.GET.noheader == '1' %}col-md-12{% else %}col-md-10 col-md-offset-1{% endif %}">
+	<div class="col-md-12">
 
 		<div class="col-md-8">
 			<h1>Salesforce Schema Lister</h1>
@@ -84,7 +84,7 @@
 							<td>{{ field.api_name }}</td>
 							<td>{{ field.data_type|linebreaks }}</td>
 							<td>{% if field.help_text %}{{ field.help_text|linebreaks }}{% endif %}</td>
-							<td>{{ field.formula|linebreaks }}</td>
+							<td>{{ field.formula|linebreaks|default:"" }}</td>
 							<td>{{ field.field_usage_display|safe }}</td>
 						</tr>
 					{% endfor %}
