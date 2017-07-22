@@ -273,14 +273,14 @@ def export(request, schema_id):
             if schema.include_field_usage:
                 sheet.write(0, 6, 'Field Usage', bold)
 
+            # Set start row
+            row = 1
+
             # create a sheet for each object
             for obj in schema.sorted_objects_api():
 
                 # Iterate over fields in object
                 for index, field in enumerate(obj.sorted_fields()):
-
-                    # Set start row
-                    row = index + 1
 
                     # Write fields to row
                     sheet.write(row, 0, obj.api_name)
@@ -292,6 +292,8 @@ def export(request, schema_id):
 
                     if schema.include_field_usage:
                         sheet.write(row, 6, field.field_usage_display_text)
+
+                    row += 1
 
         # Close the book
         book.close()
