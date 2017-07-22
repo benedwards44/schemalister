@@ -184,6 +184,8 @@ def export(request, schema_id):
     # Query for schema
     schema = get_object_or_404(Schema, random_id = schema_id)
 
+    single_tab = request.GET.get('singleTab')
+
     try:
 
         # Generate output string
@@ -200,55 +202,96 @@ def export(request, schema_id):
         unique_names = []
         unique_count = 1
 
-        # create a sheet for each object
-        for obj in schema.sorted_objects_api():
+        # This puts the objects on different worksheets
+        if not single_tab:
 
-            # strip api name
-            api_name = obj.api_name[:29]
+            # create a sheet for each object
+            for obj in schema.sorted_objects_api():
 
-            # If the name exists 
-            if api_name in unique_names:
+                # strip api name
+                api_name = obj.api_name[:29]
 
-                # Add count integer to name
-                api_name_unique = api_name + str(unique_count)
+                # If the name exists 
+                if api_name in unique_names:
 
-                unique_count += 1
+                    # Add count integer to name
+                    api_name_unique = api_name + str(unique_count)
 
-            else:
-                api_name_unique = api_name
+                    unique_count += 1
 
-            # add name to list
-            unique_names.append(api_name)
+                else:
+                    api_name_unique = api_name
+
+                # add name to list
+                unique_names.append(api_name)
+
+                # Create sheet
+                sheet = book.add_worksheet(api_name_unique)    
+
+                # Write column headers
+                sheet.write(0, 0, 'Field Label', bold)
+                sheet.write(0, 1, 'API Name', bold)
+                sheet.write(0, 2, 'Type', bold)
+                sheet.write(0, 3, 'Help Text', bold)
+                sheet.write(0, 4, 'Formula', bold)
+
+                # If the usage needs to be included, add the columns
+                if schema.include_field_usage:
+                    sheet.write(0, 5, 'Field Usage', bold)
+
+                # Iterate over fields in object
+                for index, field in enumerate(obj.sorted_fields()):
+
+                    # Set start row
+                    row = index + 1
+
+                    # Write fields to row
+                    sheet.write(row, 0, field.label)
+                    sheet.write(row, 1, field.api_name)
+                    sheet.write(row, 2, field.data_type)
+                    sheet.write(row, 3, field.help_text)
+                    sheet.write(row, 4, field.formula)
+
+                    if schema.include_field_usage:
+                        sheet.write(row, 5, field.field_usage_display_text)
+
+        # This puts all fields on the one worksheet
+        else:
 
             # Create sheet
-            sheet = book.add_worksheet(api_name_unique)    
+            sheet = book.add_worksheet('Schema')   
 
             # Write column headers
-            sheet.write(0, 0, 'Field Label', bold)
-            sheet.write(0, 1, 'API Name', bold)
-            sheet.write(0, 2, 'Type', bold)
-            sheet.write(0, 3, 'Help Text', bold)
-            sheet.write(0, 4, 'Formula', bold)
+            sheet.write(0, 0, 'Object', bold)
+            sheet.write(0, 1, 'Field Label', bold)
+            sheet.write(0, 2, 'API Name', bold)
+            sheet.write(0, 3, 'Type', bold)
+            sheet.write(0, 4, 'Help Text', bold)
+            sheet.write(0, 5, 'Formula', bold)
 
             # If the usage needs to be included, add the columns
             if schema.include_field_usage:
-                sheet.write(0, 5, 'Field Usage', bold)
+                sheet.write(0, 6, 'Field Usage', bold)
 
-            # Iterate over fields in object
-            for index, field in enumerate(obj.sorted_fields()):
+            # create a sheet for each object
+            for obj in schema.sorted_objects_api():
 
-                # Set start row
-                row = index + 1
+                # Iterate over fields in object
+                for index, field in enumerate(obj.sorted_fields()):
 
-                # Write fields to row
-                sheet.write(row, 0, field.label)
-                sheet.write(row, 1, field.api_name)
-                sheet.write(row, 2, field.data_type)
-                sheet.write(row, 3, field.help_text)
-                sheet.write(row, 4, field.formula)
+                    # Set start row
+                    row = index + 1
 
-                if schema.include_field_usage:
-                    sheet.write(row, 5, field.field_usage_display_text)
+                    # Write fields to row
+                    sheet.write(row, 0, obj.api_name)
+                    sheet.write(row, 1, field.label)
+                    sheet.write(row, 2, field.api_name)
+                    sheet.write(row, 3, field.data_type)
+                    sheet.write(row, 4, field.help_text)
+                    sheet.write(row, 5, field.formula)
+
+                    if schema.include_field_usage:
+                        sheet.write(row, 6, field.field_usage_display_text)
 
         # Close the book
         book.close()
