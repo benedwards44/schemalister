@@ -29,6 +29,7 @@ def get_objects_and_fields(schema):
 	# List of standard objects to include
 	standard_objects = (
 		'Account',
+		'AccountTeamMember',
 		'Activity',
 		'Asset',
 		'Campaign',
