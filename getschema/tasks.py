@@ -181,7 +181,7 @@ def get_objects_and_fields(schema):
 
 							# Add in picklist values
 							for picklist in field['picklistValues']:
-								new_field.data_type = new_field.data_type + picklist['label'] + '; '
+								new_field.data_type = new_field.data_type + picklist.get('label','') + '; '
 
 							# remove trailing comma and add closing bracket
 							new_field.data_type = new_field.data_type[:-2]
