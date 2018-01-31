@@ -29,6 +29,7 @@ def get_objects_and_fields(schema):
 	# List of standard objects to include
 	standard_objects = (
 		'Account',
+		'AccountContactRelation',
 		'AccountTeamMember',
 		'Activity',
 		'Asset',
@@ -38,6 +39,7 @@ def get_objects_and_fields(schema):
 		'Contact',
 		'ContentVersion',
 		'Contract',
+		'ContractContactRole',
 		'Event',
 		'ForecastingAdjustment',
 		'ForecastingQuota',
