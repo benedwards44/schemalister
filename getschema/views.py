@@ -234,10 +234,11 @@ def export(request, schema_id):
                 sheet.write(0, 2, 'Type', bold)
                 sheet.write(0, 3, 'Help Text', bold)
                 sheet.write(0, 4, 'Formula', bold)
+                sheet.write(0, 5, 'Attributes', bold)
 
                 # If the usage needs to be included, add the columns
                 if schema.include_field_usage:
-                    sheet.write(0, 5, 'Field Usage', bold)
+                    sheet.write(0, 6, 'Field Usage', bold)
 
                 # Iterate over fields in object
                 for index, field in enumerate(obj.sorted_fields()):
@@ -251,9 +252,10 @@ def export(request, schema_id):
                     sheet.write(row, 2, field.data_type)
                     sheet.write(row, 3, field.help_text)
                     sheet.write(row, 4, field.formula)
+                    sheet.write(row, 5, field.attributes)
 
                     if schema.include_field_usage:
-                        sheet.write(row, 5, field.field_usage_display_text)
+                        sheet.write(row, 6, field.field_usage_display_text)
 
         # This puts all fields on the one worksheet
         else:
@@ -268,10 +270,11 @@ def export(request, schema_id):
             sheet.write(0, 3, 'Type', bold)
             sheet.write(0, 4, 'Help Text', bold)
             sheet.write(0, 5, 'Formula', bold)
+            sheet.write(0, 6, 'Attributes', bold)
 
             # If the usage needs to be included, add the columns
             if schema.include_field_usage:
-                sheet.write(0, 6, 'Field Usage', bold)
+                sheet.write(0, 7, 'Field Usage', bold)
 
             # Set start row
             row = 1
@@ -289,9 +292,10 @@ def export(request, schema_id):
                     sheet.write(row, 3, field.data_type)
                     sheet.write(row, 4, field.help_text)
                     sheet.write(row, 5, field.formula)
+                    sheet.write(row, 6, field.attributes)
 
                     if schema.include_field_usage:
-                        sheet.write(row, 6, field.field_usage_display_text)
+                        sheet.write(row, 7, field.field_usage_display_text)
 
                     row += 1
 

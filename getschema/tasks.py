@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+ from __future__ import absolute_import
 from celery import Celery
 from django.conf import settings
 import os
@@ -14,7 +14,6 @@ from django.conf import settings
 from . import utils
 import json	
 import requests
-
 
 
 
@@ -221,6 +220,24 @@ def get_objects_and_fields(schema):
 
 								# Set the precision and scale against the field
 								new_field.data_type += ' (' + str(num_digits) + ', ' + str(field['scale']) + ')'
+
+						# Add in additional attributes
+						attributes = []
+
+						if field.get('required'):
+							attributes.append('Required')
+
+						if field.get('unique'):
+							attributes.append('Unique')
+
+						if field.get('externalId'):
+							attributes.append('External ID')
+
+						if field.get('caseSensitive'):
+							attributes.append('Case Sensitive')
+
+						if attributes:
+							new_field.attributes = ', '.join(attributes)
 
 						new_field.save()
 

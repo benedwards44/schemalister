@@ -38,6 +38,7 @@ class Field(models.Model):
 	description = models.TextField(blank=True, null=True)
 	help_text = models.TextField(blank=True, null=True)
 	formula = models.TextField(blank=True, null=True)
+	attributes = models.CharField(max_length=255, blank=True)
 
 	field_usage_display = models.TextField(blank=True, null=True)
 	field_usage_display_text = models.TextField(blank=True, null=True)
