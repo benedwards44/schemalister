@@ -224,7 +224,7 @@ def get_objects_and_fields(schema):
 						# Add in additional attributes
 						attributes = []
 
-						if field.get('required'):
+						if not field.get('nillable'):
 							attributes.append('Required')
 
 						if field.get('unique'):
