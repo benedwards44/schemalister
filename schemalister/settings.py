@@ -16,7 +16,7 @@ TEMPLATE_DEBUG = DEBUG
 THUMBNAIL_DEBUG = DEBUG
 
 ADMINS = (
-    ('Ben Edwards', 'ben@edwards.nz'),
+    (os.environ.get("ADMIN_NAME'), os.environ.get("ADMIN_EMAIL")),
 )
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -90,7 +90,8 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 SALESFORCE_CONSUMER_KEY = os.environ['SALESFORCE_CONSUMER_KEY']
 SALESFORCE_CONSUMER_SECRET = os.environ['SALESFORCE_CONSUMER_SECRET']
-SALESFORCE_REDIRECT_URI = 'https://schemalister.herokuapp.com/oauth_response'
+# SALESFORCE_REDIRECT_URI = 'https://schemalister.herokuapp.com/oauth_response'
+SALESFORCE_REDIRECT_URI = os.environ['SALESFORCE_REDIRECT_URI']
 SALESFORCE_API_VERSION = int(os.environ['SALESFORCE_API_VERSION'])
 
 # A sample logging configuration. The only tangible logging
