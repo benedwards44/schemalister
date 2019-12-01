@@ -16,7 +16,7 @@ TEMPLATE_DEBUG = DEBUG
 THUMBNAIL_DEBUG = DEBUG
 
 ADMINS = (
-    (os.environ.get("ADMIN_NAME'), os.environ.get("ADMIN_EMAIL")),
+    (os.environ.get('ADMIN_NAME'), os.environ.get('ADMIN_EMAIL')),
 )
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -26,6 +26,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = (
+    'sslserver',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
