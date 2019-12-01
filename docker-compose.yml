@@ -5,10 +5,19 @@ services:
     image: postgres
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runsslserver 0.0.0.0:8000
     volumes:
       - .:/code
     ports:
       - "8000:8000"
     depends_on:
       - db
+    environment:
+      - SALESFORCE_CONSUMER_KEY=3MVG9LBJLApeX_PB75x_WZCJskT02LjotQMryUifCODNxMFYghUeXG35e3Et7WZwJLJmUtZjs0Sow4wf6zh6K
+      - SALESFORCE_CONSUMER_SECRET=4D17ABF8506F25FB86F4061AA4A9EEC63E08B36DB75CC368364E4EC04FE56838
+      - SALESFORCE_API_VERSION=47
+      - SECRET_KEY=ScNz#8IlfJ6p#hM5tKnd
+      - ADMIN_NAME="Rick Pearson"
+      - ADMIN_EMAIL=pwpearson@gmail.com
+      - SALESFORCE_REDIRECT_URI=https://pwpearson.com:8000/oauth_response
+      - DEBUG=1

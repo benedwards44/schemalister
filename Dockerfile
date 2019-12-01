@@ -8,11 +8,11 @@ WORKDIR /code
 
 COPY requirements.txt /code/
 
-EXPOSE 8000
+# EXPOSE 8000
 
 RUN pip install -r requirements.txt
 
 COPY . /code/
 
-CMD [ "python", "manage.py", "runsslserver", "0.0.0.0:8000" ]
+# CMD [ "python", "manage.py", "runsslserver", "0.0.0.0:8000" ]
 
