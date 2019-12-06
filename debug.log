@@ -30,3 +30,14 @@ ProgrammingError: relation "getschema_schema" does not exist
 LINE 1: INSERT INTO "getschema_schema" ("random_id", "created_date",...
                     ^
 
+Internal Server Error: /loading/c80c59f0-1281-4148-98f7-a194d5a4b541/
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/site-packages/django/core/handlers/base.py", line 132, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/code/getschema/views.py", line 154, in loading
+    schema = get_object_or_404(Schema, random_id = schema_id)
+  File "/usr/local/lib/python2.7/site-packages/django/shortcuts.py", line 155, in get_object_or_404
+    return queryset.get(*args, **kwargs)
+  File "/usr/local/lib/python2.7/site-packages/django/db/models/query.py", line 338, in get
+    (self.model._meta.object_name, num)
+MultipleObjectsReturned: get() returned more than one Schema -- it returned 2!
