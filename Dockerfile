@@ -15,7 +15,7 @@ RUN pip install -r requirements.txt
 
 COPY . /code/
 
-COPY ../x509/pwpearson.com/ /cert/
+COPY ./x509/pwpearson.com/ /cert/
 
 # CMD [ "python", "manage.py", "runsslserver", "0.0.0.0:8000" ]
 
