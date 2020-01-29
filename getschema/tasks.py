@@ -54,6 +54,7 @@ def get_objects_and_fields(schema):
 		'Product2',
 		'Quote',
 		'QuoteLineItem',
+		'ServiceContract',
 		'Solution',
 		'Task',
 		'User',
