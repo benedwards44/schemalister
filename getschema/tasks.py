@@ -9,13 +9,18 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'schemalister.settings')
 
 app = Celery('tasks', broker=os.environ.get('REDISTOGO_URL', 'redis://localhost'))
 
-from getschema.models import Schema, Object, Field, Debug, FieldUsage
+from getschema.models import Schema, Object, Field, Debug, FieldUsage, StandardObject
 from django.conf import settings
 from . import utils
 import json	
 import requests
 
 
+def get_standard_objects():
+	standard_objects = []
+	for standard_object in StandardObject.objects.all():
+		standard_objects.append(standard_object.name)
+	return standard_objects
 
 
 @app.task
@@ -26,84 +31,7 @@ def get_objects_and_fields(schema):
 	access_token = schema.access_token
 
 	# List of standard objects to include
-	standard_objects = (
-		'Account',
-		'AccountContactRelation',
-		'AccountTeamMember',
-		'Activity',
-		'Asset',
-		'Campaign',
-		'CampaignMember',
-		'Case',
-		'Contact',
-		'ContentVersion',
-		'Contract',
-		'ContractContactRole',
-		'Event',
-		'ForecastingAdjustment',
-		'ForecastingQuota',
-		'KnowledgeArticle',
-		'Lead',
-		'Opportunity',
-		'OpportunityCompetitor',
-		'OpportunityLineItem',
-		'Order',
-		'OrderItem',
-		'Pricebook2',
-		'PricebookEntry',
-		'Product2',
-		'Quote',
-		'QuoteLineItem',
-		'ServiceContract',
-		'Solution',
-		'Task',
-		'User',
-
-		# Field Services Lightning Objects
-		'Address',
-		'AppExtension',
-		'AssignedResource',
-		'AssociatedLocation',
-		'DigitalSignature',
-		'FieldServiceMobileSettings',
-		'LinkedArticle',
-		'Location',
-		'MaintenanceAsset',
-		'MaintenancePlan',
-		'OperatingHours',
-		'ProductConsumed',
-		'ProductItem',
-		'ProductItemTransaction',
-		'ProductRequest',
-		'ProductRequestLineItem',
-		'ProductRequired',
-		'ProductTransfer',
-		'ResourceAbsence',
-		'ResourcePreference',
-		'ServiceAppointment',
-		'ServiceAppointmentStatus',
-		'ServiceCrew',
-		'ServiceCrewMember',
-		'ServiceReport',
-		'ServiceReportTemplate',
-		'ServiceResource',
-		'ServiceResourceCapacity',
-		'ServiceResourceSkill',
-		'ServiceTerritory',
-		'ServiceTerritoryLocation',
-		'ServiceTerritoryMember',
-		'Shipment',
-		'Skill',
-		'SkillRequirement',
-		'TimeSheet',
-		'TimeSheetEntry',
-		'TimeSlot',
-		'WorkOrder',
-		'WorkOrderLineItem',
-		'WorkOrderStatus',
-		'WorkOrderLineItemStatus',
-		'WorkType',
-	)
+	standard_objects = get_standard_objects()
 
 	headers = {
 		'Authorization': 'Bearer ' + access_token, 

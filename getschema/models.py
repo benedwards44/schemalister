@@ -108,3 +108,13 @@ class FieldUsage(models.Model):
 
 class Debug(models.Model):
 	debug = models.TextField()
+
+
+class StandardObject(models.Model):
+	name = models.CharField(max_length=255)
+
+	class Meta:
+		ordering = ('name', )
+
+	def __unicode__(self):
+		return self.name
