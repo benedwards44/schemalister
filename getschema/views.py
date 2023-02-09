@@ -14,7 +14,7 @@ import uuid
 from . import utils
 
 from xlsxwriter.workbook import Workbook
-from io import StringIO
+from io import BytesIO
 
 def index(request):
     
@@ -204,7 +204,7 @@ def export(request, schema_id):
     try:
 
         # Generate output string
-        output = StringIO()
+        output = BytesIO()
 
         # Create workbook
         book = Workbook(output, {'in_memory': True})
