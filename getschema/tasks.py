@@ -6,7 +6,6 @@ import datetime
 import traceback
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'schemalister.settings')
-
 app = Celery('tasks', broker=os.environ.get('REDIS_URL', 'redis://localhost'))
 
 from getschema.models import Schema, Object, Field, Debug, FieldUsage, StandardObject
