@@ -116,5 +116,5 @@ class StandardObject(models.Model):
 	class Meta:
 		ordering = ('name', )
 
-	def __unicode__(self):
+	def __str__(self):
 		return self.name

@@ -117,12 +117,12 @@ def oauth_response(request):
 
                 # Queue job to run async
                 try:
-                    get_objects_and_fields.delay(schema)
+                    get_objects_and_fields.delay(schema.id)
                 except:
                     # If fail above, wait 5 seconds and try again. Not ideal but should work for now
                     sleep(5)
                     try:
-                        get_objects_and_fields.delay(schema)
+                        get_objects_and_fields.delay(schema.id)
                     except Exception as error:
                         schema.status = 'Error'
                         schema.error = error
@@ -389,7 +389,7 @@ def auth_details(request):
             schema.save()
 
             # Run job
-            get_objects_and_fields.delay(schema)
+            get_objects_and_fields.delay(schema.id)
 
             # Build response 
             response_data = {

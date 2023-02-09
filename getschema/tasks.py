@@ -24,8 +24,9 @@ def get_standard_objects():
 
 
 @app.task
-def get_objects_and_fields(schema): 
+def get_objects_and_fields(schema_id): 
 
+	schema = Schema.objects.get(pk=schema_id)
 	instance_url = schema.instance_url
 	org_id = schema.org_id
 	access_token = schema.access_token
