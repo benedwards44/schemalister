@@ -1,9 +1,9 @@
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 from getschema.models import StandardObject
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
 
-    def handle_noargs(self, **options):
+    def handle(self, **options):
         
         standard_objects = [
             'Account',
