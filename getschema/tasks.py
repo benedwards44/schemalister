@@ -8,6 +8,9 @@ import traceback
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'schemalister.settings')
 app = Celery('tasks', broker=os.environ.get('REDIS_URL', 'redis://localhost'))
 
+import django
+django.setup()
+
 from getschema.models import Schema, Object, Field, Debug, FieldUsage, StandardObject
 from django.conf import settings
 from . import utils
