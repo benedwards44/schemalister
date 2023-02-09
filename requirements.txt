@@ -14,6 +14,7 @@ gunicorn==20.1.0
 idna==3.4
 kombu==5.2.4
 prompt-toolkit==3.0.36
+psycopg2==2.9.5
 pystache==0.6.0
 pytz==2022.7.1
 redis==2.10.3
