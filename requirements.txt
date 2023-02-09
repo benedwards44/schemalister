@@ -1,5 +1,6 @@
 amqp==5.1.1
 asgiref==3.6.0
+async-timeout==4.0.2
 billiard==3.6.4.0
 celery==5.2.7
 certifi==2022.12.7
@@ -17,7 +18,7 @@ prompt-toolkit==3.0.36
 psycopg2==2.9.5
 pystache==0.6.0
 pytz==2022.7.1
-redis==2.10.3
+redis==4.5.1
 requests==2.28.2
 six==1.16.0
 sqlparse==0.4.3
