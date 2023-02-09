@@ -204,7 +204,7 @@ def export(request, schema_id):
     try:
 
         # Generate output string
-        output = StringIO.StringIO()
+        output = StringIO()
 
         # Create workbook
         book = Workbook(output, {'in_memory': True})
