@@ -22,7 +22,7 @@ class Schema(models.Model):
 		return self.object_set.order_by('api_name')
 
 class Object(models.Model):
-	schema = models.ForeignKey(Schema)
+	schema = models.ForeignKey(Schema, on_delete=models.deletion.CASCADE)
 	label = models.CharField(max_length=255)
 	api_name = models.CharField(max_length=255)
 
@@ -31,7 +31,7 @@ class Object(models.Model):
 
 
 class Field(models.Model):
-	object = models.ForeignKey(Object)
+	object = models.ForeignKey(Object, on_delete=models.deletion.CASCADE)
 	label = models.CharField(max_length=255)
 	api_name = models.TextField(max_length=255)
 	data_type = models.TextField()
@@ -82,7 +82,7 @@ class FieldUsage(models.Model):
 	Captures each location that the field is used in
 	"""
 
-	field = models.ForeignKey(Field)
+	field = models.ForeignKey(Field, on_delete=models.deletion.CASCADE)
 
 	TYPE_CHOICES = (
 		('Apex Class', 'Apex Class'),

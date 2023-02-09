@@ -1,5 +1,4 @@
-from django.shortcuts import render_to_response, get_object_or_404
-from django.template import RequestContext
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from getschema.models import Schema, Object, Field, Debug
@@ -15,10 +14,7 @@ import uuid
 from . import utils
 
 from xlsxwriter.workbook import Workbook
-try:
-    import cStringIO as StringIO
-except ImportError:
-    import StringIO
+from io import StringIO
 
 def index(request):
     
@@ -40,7 +36,7 @@ def index(request):
     else:
         login_form = LoginForm()
 
-    return render_to_response('index.html', RequestContext(request,{'login_form': login_form}))
+    return render(request, 'index.html', {'login_form': login_form})
 
 def oauth_response(request):
 
@@ -77,12 +73,12 @@ def oauth_response(request):
             org_id = org_id[-18:]
 
             # get username of the authenticated user
-            r = requests.get(instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/sobjects/User/' + user_id + '?fields=Username', headers={'Authorization': 'OAuth ' + access_token})
+            r = requests.get(instance_url + '/services/data/v' + settings.SALESFORCE_API_VERSION + '.0/sobjects/User/' + user_id + '?fields=Username', headers={'Authorization': 'OAuth ' + access_token})
             query_response = json.loads(r.text)
             username = query_response['Username']
 
             # get the org name of the authenticated user
-            r = requests.get(instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/sobjects/Organization/' + org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + access_token})
+            r = requests.get(instance_url + '/services/data/v' + settings.SALESFORCE_API_VERSION + '.0/sobjects/Organization/' + org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + access_token})
             org_name = json.loads(r.text)['Name']
 
         login_form = LoginForm(initial={'environment': environment, 'access_token': access_token, 'instance_url': instance_url, 'org_id': org_id})    
@@ -134,7 +130,17 @@ def oauth_response(request):
 
                 return HttpResponseRedirect('/loading/' + str(schema.random_id))
 
-    return render_to_response('oauth_response.html', RequestContext(request,{'error': error_exists, 'error_message': error_message, 'username': username, 'org_name': org_name, 'login_form': login_form}))
+    return render(
+        request, 
+        'oauth_response.html',
+        {
+            'error': error_exists, 
+            'error_message': error_message, 
+            'username': username, 
+            'org_name': org_name, 
+            'login_form': login_form
+        }
+    )
 
 # AJAX endpoint for page to constantly check if job is finished
 def job_status(request, schema_id):
@@ -166,14 +172,23 @@ def loading(request, schema_id):
 
         return HttpResponseRedirect(return_url)
     else:
-        return render_to_response('loading.html', RequestContext(request, {'schema': schema}))    
+        return render(
+            request, 
+            'loading.html',
+            {'schema': schema}
+        )
+          
 
 def view_schema(request, schema_id):
 
     # Pass the schema to the page but delete it after view - it's not nice to store Orgs data models
     schema = get_object_or_404(Schema, random_id = schema_id)
 
-    return render_to_response('schema.html', RequestContext(request,{'schema': schema}))
+    return render(
+        request, 
+        'schema.html',
+        {'schema': schema}
+    )
 
 
 def export(request, schema_id):
@@ -328,7 +343,11 @@ def logout(request):
     # Determine logout url based on environment
     instance_prefix = request.GET.get('instance_prefix')
         
-    return render_to_response('logout.html', RequestContext(request, {'instance_prefix': instance_prefix}))
+    return render(
+        request, 
+        'logout.html',
+        {'instance_prefix': instance_prefix}
+    )
 
 
 @csrf_exempt
@@ -363,7 +382,7 @@ def auth_details(request):
             schema.status = 'Running'
 
             # get the org name of the authenticated user
-            r = requests.get(schema.instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/sobjects/Organization/' + schema.org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + schema.access_token})
+            r = requests.get(schema.instance_url + '/services/data/v' + settings.SALESFORCE_API_VERSION + '.0/sobjects/Organization/' + schema.org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + schema.access_token})
             schema.org_name = json.loads(r.text)['Name']
 
             # Save the schema

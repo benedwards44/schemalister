@@ -40,7 +40,7 @@ def get_objects_and_fields(schema):
 
 	# Describe all sObjects
 	all_objects = requests.get(
-		instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/sobjects/', 
+		instance_url + '/services/data/v%s.0/sobjects/' % settings.SALESFORCE_API_VERSION, 
 		headers=headers
 	)
 

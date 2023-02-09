@@ -1,17 +1,18 @@
-from django.conf.urls import patterns, include, url
+from django.urls import path, include
 from django.views.generic import TemplateView, RedirectView
 from django.contrib import admin
-admin.autodiscover()
 
-urlpatterns = patterns('',
-    url(r'^$', 'getschema.views.index', name='index'),
-    url(r'^oauth_response/$', 'getschema.views.oauth_response', name='oauth_response'),
-    url(r'^schema/(?P<schema_id>[0-9A-Za-z_\-]+)/$', 'getschema.views.view_schema', name='view_schema'),
-    url(r'^export/(?P<schema_id>[0-9A-Za-z_\-]+)/$', 'getschema.views.export', name='export'),
-    url(r'^logout/$', 'getschema.views.logout', name='logout'),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^job_status/(?P<schema_id>[0-9A-Za-z_\-]+)/$', 'getschema.views.job_status'),
-    url(r'^loading/(?P<schema_id>[0-9A-Za-z_\-]+)/$', 'getschema.views.loading'),
-    url(r'^delete_schema/(?P<schema_id>[0-9A-Za-z_\-]+)/$', 'getschema.views.delete_schema', name='delete_schema'),
-    url(r'^auth_details/$', 'getschema.views.auth_details'),
-)
+from getschema import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.index, name='index'),
+    path('oauth_response/', views.oauth_response, name='oauth_response'),
+    path('schema/<str:schema_id>/', views.view_schema, name='view_schema'),
+    path('export/<str:schema_id>/', views.export, name='export'),
+    path('logout/', views.logout, name='logout'),
+    path('job_status/<str:schema_id>/', views.job_status),
+    path('loading/<str:schema_id>/', views.loading),
+    path('delete_schema/<str:schema_id>/', views.delete_schema, name='delete_schema'),
+    path('auth_details/', views.auth_details),
+]
