@@ -101,7 +101,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-
 STATIC_URL = 'static/'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -109,6 +108,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 SALESFORCE_CONSUMER_KEY = os.environ.get('SALESFORCE_CONSUMER_KEY')
 SALESFORCE_CONSUMER_SECRET = os.environ.get('SALESFORCE_CONSUMER_SECRET')
 SALESFORCE_REDIRECT_URI = 'https://schemalister.herokuapp.com/oauth_response'
-SALESFORCE_API_VERSION = os.environ.get('SALESFORCE_API_VERSION', '55')
+SALESFORCE_API_VERSION = os.environ.get('SALESFORCE_API_VERSION', '58')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
