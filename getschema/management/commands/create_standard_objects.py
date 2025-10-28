@@ -256,6 +256,7 @@ class Command(BaseCommand):
             'ContractLineOutcomeData',
             'ContractPaymentAgreement',
             'Coupon',
+            'CourseOffering',
             'CourseOfferingParticipant',
             'CourseOfferingPtcpResult',
             'CourseOfferingSchedule',
