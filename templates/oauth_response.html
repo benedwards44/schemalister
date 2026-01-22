@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+	<div class="{% if request.GET.noheader == '1' %}col-md-12{% else %}col-md-6 col-md-offset-3{% endif %}">
+
+		<h1>Salesforce Schema Lister</h1>
+		<p>
+			This tool uses the Salesforce Metadata API to build a list of objects, fields and field attributes from within your Salesforce Org.
+		</p>
+		<p>
+			None of your organisation information or data is captured or kept from running this tool.
+		</p>
+					
+		<table id="login_table">
+
+			<form action="." method="POST" id="loginForm"> {% csrf_token %}
+
+				<table class="login_table">
+
+					{% if messages %}
+
+						<tr>
+							<td colspan="2">
+								<div role="alert" class="alert alert-danger">
+								    {% for message in messages %}
+								    	{{ message }}<br/>
+								    {% endfor %}
+							    </div>
+							</td>
+						</tr>
+						
+					{% endif %}
+
+					{% if not error %}
+
+						<h2>Logged in as:</h2>
+
+						<tr>
+							<td width="150">
+								<strong>Username:</strong>
+							</td>
+							<td>
+								{{ username }}
+							</td>
+						</tr>
+
+						<tr>
+							<td width="150">
+								<strong>Organisation:</strong>
+							</td>
+							<td>
+								{{ org_name }}
+							</td>
+						</tr>
+
+						<tr>
+							<td width="150">
+								&nbsp;
+							</td>
+							<td>
+								<div class="checkbox">
+									<label>
+										{{ login_form.include_managed_objects }} Include Managed Package Objects
+									</label>
+								</div>
+							</td>
+						</tr>
+
+						<tr>
+							<td width="150">
+								&nbsp;
+							</td>
+							<td>
+								<div class="checkbox">
+									<label>
+										{{ login_form.include_field_usage }} Include field usage?
+									</label>
+								</div>
+								<p>
+									When this is checked, the Schema Lister will run queries to determine metadata where each field is used (eg. Workflows, Apex, Page Layouts etc). Takes substantially longer to run.
+								</p>
+							</td>
+						</tr>
+
+						<tr>
+							<td colspan="2"></td>
+						</tr>
+
+						<tr>
+							<td colspan="2" style="text-align:center;height:50px;">
+								<input type="submit" name="logout" value="Logout" onclick="showLogout();" oncomplete="hideLogout();" />
+								<input type="submit" name="get_schema" value="Get Schema" onclick="hideTable();" oncomplete="showTable();" />
+							</td>
+						</tr>
+
+					{% else %}
+
+					<tr>
+						<td colspan="2" width="500">
+							<div role="alert" class="alert alert-danger">
+								<strong>Error:</strong> {{ error_message }}
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td colspan="2" width="500">
+							Please go <a href="/">back</a> and try again.
+						</td>
+					</tr>
+
+					{% endif %}
+
+				</table>
+
+				<div class="loading">
+					<div style="float:left;">
+						<img src="{% static 'images/loading.gif' %}" alt="Loading" title="Loading" />
+					</div>
+					<div style="float:left;margin-left:20px;">
+						<h1 style="font-size:1.5em;margin-top:20px;">Querying objects and fields...</h1>
+						<p>This can take a few minutes.</p>
+					</div>
+				</div>
+
+				<div class="logging_out">
+					<div style="float:left;">
+						<img src="{% static 'images/loading.gif' %}" alt="Loading" title="Loading" />
+					</div>
+					<div style="float:left;margin-left:20px;">
+						<h1 style="font-size:1.5em;margin-top:20px;">Logging out...</h1>
+						<p>Revoking OAuth token.</p>
+					</div>
+				</div>
+
+				<div style="display:none;">
+					{{ login_form.environment.as_hidden }}
+					{{ login_form.access_token.as_hidden }}
+					{{ login_form.instance_url.as_hidden }}
+					{{ login_form.org_id.as_hidden }}
+				</div>
+
+			</form>
+
+		</table>
+
+	</div>
+
+{% endblock %}

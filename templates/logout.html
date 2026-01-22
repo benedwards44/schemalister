@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	<div class="{% if request.GET.noheader == '1' %}col-md-12{% else %}col-md-6 col-md-offset-3{% endif %}">
+
+		<h1>Salesforce Schema Lister</h1>
+		<p>
+			Successfully logged out of Salesforce and Schema Lister
+		</p>
+
+		<iframe src="https://{{ instance_prefix }}.salesforce.com/secur/logout.jsp" width="0" height="0" style="display:none;"></iframe>
+
+		<script>
+			setTimeout(function () {
+	       		window.location.href = "/";
+	    	}, 3000);
+		</script>
+
+	</div>
+{% endblock %}

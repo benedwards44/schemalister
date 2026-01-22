@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+	<div class="{% if request.GET.noheader == '1' %}col-md-12{% else %}col-md-6 col-md-offset-3{% endif %} text-center">
+
+		<h1>404 - Page Not Found</h1>
+
+		<img alt="Doh" class="media-image" height="300" width="300" src="{% static 'images/oh-dear.png' %}">
+
+		<div role="alert" class="alert alert-danger">
+			The page you are looking for could not be found. If you are trying to load a schema, chances are it was deleted or clear from the database. Please run the process again.
+			<br/><br/>
+			Click <a href="/">here</a> to return to the home page.
+		</div>
+
+	</div>
+
+{% endblock %}

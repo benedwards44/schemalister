@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+	<div class="{% if request.GET.noheader == '1' %}col-md-12{% else %}col-md-6 col-md-offset-3{% endif %}">
+
+		<h1>Salesforce Schema Lister</h1>
+		<p>
+			This tool uses the Salesforce Metadata API to build a list of objects, fields and field attributes from within your Salesforce Org.
+		</p>
+		<p>
+			None of your organisation information or data is captured or kept from running this tool.
+		</p>
+					
+		<div class="loading-components">
+
+			<div style="float:left;">
+				<img src="{% static 'images/loading.gif' %}" alt="Loading" title="Loading" />
+			</div>
+
+			<div style="float:left;margin-left:20px;">
+				<h1 style="font-size:1.5em;margin-top:20px;">Querying objects and fields...</h1>
+				<p>This can take a few minutes.</p>
+			</div>
+
+		</div>
+
+		<div class="alert alert-danger error" role="alert" style="display:none;">
+			<p>
+				There was an error processing your request: <i class="error_message"></i>
+				<br/><br/>
+				Please <a href="/{% if request.GET.noheader == '1' %}?noheader=1{% endif %}">return</a> to the home page and try again.
+			</p>
+		</div>
+
+	</div>
+
+	<script>
+ 		window.setInterval(function () 
+ 		{
+       		$.ajax({
+			    url: '/job_status/{{ schema.random_id }}',
+			    type: 'get', //this is the default though, you don't actually need to always mention it
+			    success: function(resp) 
+			    {
+			        if (resp.status == 'Finished')
+			        {
+			        	window.location = '/schema/{{ schema.random_id }}/{% if request.GET.noheader == "1" %}?noheader=1{% endif %}';
+			        } 
+			        else if (resp.status == 'Error')
+			        {
+			        	$('.loading-components').hide();
+			        	$('.error').show();
+			        	$('.error_message').text(resp.error);
+			        }
+			        // Else job is still running, this will re-run shortly.
+			    },
+			    failure: function(resp) 
+			    { 
+			        $('.loading-components').hide();
+		        	$('.error').show();
+		        	$('.error_message').text(resp);
+			    }
+			});
+    	}, 3000);
+	</script>
+
+{% endblock %}
