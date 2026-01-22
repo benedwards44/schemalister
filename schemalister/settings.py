@@ -116,10 +116,6 @@ STORAGES = {
     },
 }
 
-# Don't store the original (un-hashed filename) version of static files, to reduce slug size:
-# https://whitenoise.readthedocs.io/en/latest/django.html#WHITENOISE_KEEP_ONLY_HASHED_FILES
-WHITENOISE_KEEP_ONLY_HASHED_FILES = True
-
 # Celery settings
 REDIS_URL = env('REDIS_URL')
 CELERY_BROKER_URL = REDIS_URL
