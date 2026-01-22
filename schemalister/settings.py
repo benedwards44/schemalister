@@ -107,6 +107,12 @@ if not IS_LOCAL:
         'PORT': env("PGPORT"),
     }
 
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 # Celery settings
 REDIS_URL = env('REDIS_URL')
 CELERY_BROKER_URL = REDIS_URL
