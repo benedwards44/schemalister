@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-from getschema.models import Schema, Object, Field, Debug
+from getschema.models import Schema
 from getschema.forms import LoginForm
 from django.conf import settings
 from getschema.tasks import get_objects_and_fields
@@ -10,8 +10,6 @@ import requests
 import datetime
 from time import sleep
 import uuid
-
-from . import utils
 
 from xlsxwriter.workbook import Workbook
 from io import BytesIO
@@ -73,12 +71,12 @@ def oauth_response(request):
             org_id = org_id[-18:]
 
             # get username of the authenticated user
-            r = requests.get(instance_url + '/services/data/v' + settings.SALESFORCE_API_VERSION + '.0/sobjects/User/' + user_id + '?fields=Username', headers={'Authorization': 'OAuth ' + access_token})
+            r = requests.get(instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/sobjects/User/' + user_id + '?fields=Username', headers={'Authorization': 'OAuth ' + access_token})
             query_response = json.loads(r.text)
             username = query_response['Username']
 
             # get the org name of the authenticated user
-            r = requests.get(instance_url + '/services/data/v' + settings.SALESFORCE_API_VERSION + '.0/sobjects/Organization/' + org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + access_token})
+            r = requests.get(instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/sobjects/Organization/' + org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + access_token})
             org_name = json.loads(r.text)['Name']
 
         login_form = LoginForm(initial={'environment': environment, 'access_token': access_token, 'instance_url': instance_url, 'org_id': org_id})    
@@ -382,7 +380,7 @@ def auth_details(request):
             schema.status = 'Running'
 
             # get the org name of the authenticated user
-            r = requests.get(schema.instance_url + '/services/data/v' + settings.SALESFORCE_API_VERSION + '.0/sobjects/Organization/' + schema.org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + schema.access_token})
+            r = requests.get(schema.instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/sobjects/Organization/' + schema.org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + schema.access_token})
             schema.org_name = json.loads(r.text)['Name']
 
             # Save the schema
