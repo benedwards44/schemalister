@@ -393,7 +393,7 @@ def auth_details(request):
 
             # Build response 
             response_data = {
-                'job_url': 'https://schemalister.herokuapp.com/loading/' + str(schema.random_id) + '/?noheader=1',
+                'job_url': 'https://schemalister.cloudtoolkit.co/loading/' + str(schema.random_id) + '/?noheader=1',
                 'status': 'Success',
                 'success': True
             }
