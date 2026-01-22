@@ -1,25 +1,39 @@
 import os
-import dj_database_url
+import environ
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-IS_HEROKU = "DYNO" in os.environ
+env = environ.Env(
+    ENVIRONMENT=(str, 'production'),
+    DEBUG=(bool, False),
+    REDIS_URL=(str, 'redis://localhost:6379'),
+    SALESFORCE_CONSUMER_KEY=(str, ''),
+    SALESFORCE_CONSUMER_SECRET=(str, ''),
+    SALESFORCE_API_VERSION=(int, 65),
+    SALESFORCE_REDIRECT_URI=(str, ''),
+)
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+ENVIRONMENT = env('ENVIRONMENT')
+IS_LOCAL = ENVIRONMENT == 'dev'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-6qna4-2lxtfca*0yyo4qe+7tz3y@0hecp#2_ri61si2z2-f2+&')
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = not IS_HEROKU or os.environ.get('DEBUG') == '1'
-TEMPLATE_DEBUG = DEBUG
-THUMBNAIL_DEBUG = DEBUG
+DEBUG = True if IS_LOCAL else bool(env('DEBUG'))
 
-if IS_HEROKU:
+if not IS_LOCAL:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
+    CSRF_TRUSTED_ORIGINS = [
+        #'https://web-production-9e9fa.up.railway.app',
+        'https://schemalister.cloudtoolkit.co'
+    ]
 
 ADMINS = (
     ('Ben Edwards', 'ben@edwards.nz'),
@@ -30,6 +44,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,12 +96,36 @@ DATABASES = {
     }
 }
 
-if "DATABASE_URL" in os.environ:
+# For running on server
+if not IS_LOCAL:
     # Configure Django for DATABASE_URL environment variable.
-    DATABASES["default"] = dj_database_url.config(
-        conn_max_age=MAX_CONN_AGE, ssl_require=True)
+    DATABASES["default"] = {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ["PGDATABASE"],
+        'USER': os.environ["PGUSER"],
+        'PASSWORD': os.environ["PGPASSWORD"],
+        'HOST': os.environ["PGHOST"],
+        'PORT': os.environ["PGPORT"],
+    }
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage"
+    },
+    # Enable WhiteNoise's GZip and Brotli compression of static assets:
+    # https://whitenoise.readthedocs.io/en/latest/django.html#add-compression-and-caching-support
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
+# Don't store the original (un-hashed filename) version of static files, to reduce slug size:
+# https://whitenoise.readthedocs.io/en/latest/django.html#WHITENOISE_KEEP_ONLY_HASHED_FILES
+WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 
 # Celery settings
+REDIS_URL = env('REDIS_URL')
+CELERY_BROKER_URL = REDIS_URL
 BROKER_POOL_LIMIT = 1
 
 # Internationalization
@@ -98,16 +137,15 @@ USE_TZ = True
 
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = "static/"
+
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / 'static'
 ]
-STATIC_URL = 'static/'
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-SALESFORCE_CONSUMER_KEY = os.environ.get('SALESFORCE_CONSUMER_KEY')
-SALESFORCE_CONSUMER_SECRET = os.environ.get('SALESFORCE_CONSUMER_SECRET')
-SALESFORCE_REDIRECT_URI = 'https://schemalister.herokuapp.com/oauth_response'
-SALESFORCE_API_VERSION = os.environ.get('SALESFORCE_API_VERSION', '58')
+SALESFORCE_CONSUMER_KEY = env('SALESFORCE_CONSUMER_KEY')
+SALESFORCE_CONSUMER_SECRET = env('SALESFORCE_CONSUMER_SECRET')
+SALESFORCE_REDIRECT_URI = env('SALESFORCE_REDIRECT_URI')
+SALESFORCE_API_VERSION = int(env('SALESFORCE_API_VERSION'))
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

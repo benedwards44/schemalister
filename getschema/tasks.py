@@ -1,21 +1,12 @@
 from __future__ import absolute_import
-from celery import Celery
 from django.conf import settings
-import os
 import datetime
 import traceback
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'schemalister.settings')
-app = Celery('tasks', broker=os.environ.get('REDIS_URL', 'redis://localhost'))
-
-import django
-django.setup()
-
 from getschema.models import Schema, Object, Field, Debug, FieldUsage, StandardObject
 from django.conf import settings
 from . import utils
-import json	
 import requests
+from celery import shared_task
 
 
 def get_standard_objects():
@@ -25,7 +16,7 @@ def get_standard_objects():
 	return standard_objects
 
 
-@app.task
+@shared_task
 def get_objects_and_fields(schema_id): 
 
 	schema = Schema.objects.get(pk=schema_id)
