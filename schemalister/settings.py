@@ -100,11 +100,11 @@ if not IS_LOCAL:
     # Configure Django for DATABASE_URL environment variable.
     DATABASES["default"] = {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ["PGDATABASE"],
-        'USER': os.environ["PGUSER"],
-        'PASSWORD': os.environ["PGPASSWORD"],
-        'HOST': os.environ["PGHOST"],
-        'PORT': os.environ["PGPORT"],
+        'NAME': env("PGDATABASE"),
+        'USER': env("PGUSER"),
+        'PASSWORD': env("PGPASSWORD"),
+        'HOST': env("PGHOST"),
+        'PORT': env("PGPORT"),
     }
 
 STORAGES = {
