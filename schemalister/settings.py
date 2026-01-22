@@ -107,15 +107,6 @@ if not IS_LOCAL:
         'PORT': env("PGPORT"),
     }
 
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage"
-    },
-    "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-    },
-}
-
 # Celery settings
 REDIS_URL = env('REDIS_URL')
 CELERY_BROKER_URL = REDIS_URL
