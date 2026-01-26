@@ -1,6 +1,7 @@
 import os
 import environ
 from pathlib import Path
+import sys
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -139,3 +140,38 @@ SALESFORCE_REDIRECT_URI = env('SALESFORCE_REDIRECT_URI')
 SALESFORCE_API_VERSION = int(env('SALESFORCE_API_VERSION'))
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False, # Retain Django's default loggers
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout, # Explicitly direct to stdout
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        '': { # This is the "root" logger, handling all messages by default
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'django.request': { # Django's request logger
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}

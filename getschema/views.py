@@ -10,9 +10,12 @@ import requests
 from django.utils import timezone
 from time import sleep
 import uuid
+import logging
 
 from xlsxwriter.workbook import Workbook
 from io import BytesIO
+
+logger = logging.getLogger(__name__) 
 
 def index(request):
     
@@ -115,13 +118,17 @@ def oauth_response(request):
 
                 # Queue job to run async
                 try:
+                    logger.info("Starting async job to query objects and schema")
                     get_objects_and_fields.delay(schema.id)
-                except:
+                except Exception as ex:
+                    logger.error("Error triggering async job: " + str(ex))
+                    logger.info("Retrying async job")
                     # If fail above, wait 5 seconds and try again. Not ideal but should work for now
                     sleep(5)
                     try:
                         get_objects_and_fields.delay(schema.id)
                     except Exception as error:
+                        logger.error("Error triggering async job: " + str(error))
                         schema.status = 'Error'
                         schema.error = error
                         schema.save()
@@ -351,7 +358,7 @@ def logout(request):
 @csrf_exempt
 def auth_details(request):
     """
-        RESTful endpoint to pass authentication details
+    RESTful endpoint to pass authentication details
     """
 
     try:
@@ -405,4 +412,4 @@ def auth_details(request):
             'error_text': str(error)
         }
     
-    return HttpResponse(json.dumps(response_data), content_type = 'application/json')
+    return HttpResponse(json.dumps(response_data), content_type='application/json')
