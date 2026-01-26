@@ -7,7 +7,7 @@ from django.conf import settings
 from getschema.tasks import get_objects_and_fields
 import json    
 import requests
-import datetime
+from django.utils import timezone
 from time import sleep
 import uuid
 
@@ -103,7 +103,7 @@ def oauth_response(request):
                 # Create schema record
                 schema = Schema()
                 schema.random_id = uuid.uuid4()
-                schema.created_date = datetime.datetime.now()
+                schema.created_date = timezone.now()
                 schema.org_id = org_id
                 schema.org_name = org_name
                 schema.access_token = access_token
@@ -373,7 +373,7 @@ def auth_details(request):
             # create the schema record to store results
             schema = Schema()
             schema.random_id = uuid.uuid4()
-            schema.created_date = datetime.datetime.now()
+            schema.created_date = timezone.now()
             schema.org_id = request_data['org_id']
             schema.access_token = request_data['access_token']
             schema.instance_url = request_data['instance_url']

@@ -1,8 +1,8 @@
 from __future__ import absolute_import
 from django.conf import settings
-import datetime
+from django.utils import timezone
 import traceback
-from getschema.models import Schema, Object, Field, Debug, FieldUsage, StandardObject
+from getschema.models import Schema, Object, Field, Debug, StandardObject
 from django.conf import settings
 from . import utils
 import requests
@@ -21,7 +21,6 @@ def get_objects_and_fields(schema_id):
 
 	schema = Schema.objects.get(pk=schema_id)
 	instance_url = schema.instance_url
-	org_id = schema.org_id
 	access_token = schema.access_token
 
 	# List of standard objects to include
@@ -219,7 +218,7 @@ def get_objects_and_fields(schema_id):
 		schema.status = 'Error'
 		schema.error = traceback.format_exc()
 	
-	schema.finished_date = datetime.datetime.now()
+	schema.finished_date = timezone.now()
 	schema.save()
 
 	return str(schema.id)
