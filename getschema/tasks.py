@@ -23,7 +23,9 @@ def get_objects_and_fields(schema_id):
 	instance_url = schema.instance_url
 	access_token = schema.access_token
 
+	# Update to running
 	schema.status = 'Running'
+	schema.save()
 
 	# List of standard objects to include
 	standard_objects = get_standard_objects()

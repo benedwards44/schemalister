@@ -18,7 +18,7 @@ def get_urls_for_object(schema, object_name):
     For a given object type, get the list of describe URLs
     """
 
-    url = schema.instance_url + '/services/data/v' + settings.SALESFORCE_API_VERSION + '.0/tooling/query/?q=SELECT+Id+FROM+' + object_name
+    url = schema.instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/tooling/query/?q=SELECT+Id+FROM+' + object_name
 
     if object_name in ['ApexClass','ApexPage','ApexComponent','ApexTrigger']:
         url += '+WHERE+NamespacePrefix=null'
