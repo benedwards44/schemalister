@@ -45,6 +45,7 @@
 			    type: 'get', //this is the default though, you don't actually need to always mention it
 			    success: function(resp) 
 			    {
+					console.log('Job Response', resp);
 			        if (resp.status == 'Finished')
 			        {
 			        	window.location = '/schema/{{ schema.random_id }}/{% if request.GET.noheader == "1" %}?noheader=1{% endif %}';
