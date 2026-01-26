@@ -869,9 +869,14 @@ class Command(BaseCommand):
             'WstDispoEmssnFctrSetItm',
         ]
 
+        current_objects = []
+        for obj in StandardObject.objects.all():
+            current_objects.append(obj.name)
+
         for obj in standard_objects:
-            new_object = StandardObject()
-            new_object.name = obj
-            new_object.save()
+            if obj not in current_objects:
+                new_object = StandardObject()
+                new_object.name = obj
+                new_object.save()
 
 

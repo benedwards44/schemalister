@@ -113,7 +113,6 @@ def oauth_response(request):
                 schema.instance_url = instance_url
                 schema.include_field_usage = login_form.cleaned_data['include_field_usage']
                 schema.include_managed_objects = login_form.cleaned_data['include_managed_objects']
-                schema.status = 'Running'
                 schema.save()
 
                 # Queue job to run async
@@ -384,7 +383,6 @@ def auth_details(request):
             schema.org_id = request_data['org_id']
             schema.access_token = request_data['access_token']
             schema.instance_url = request_data['instance_url']
-            schema.status = 'Running'
 
             # get the org name of the authenticated user
             r = requests.get(schema.instance_url + '/services/data/v' + str(settings.SALESFORCE_API_VERSION) + '.0/sobjects/Organization/' + schema.org_id + '?fields=Name', headers={'Authorization': 'OAuth ' + schema.access_token})
