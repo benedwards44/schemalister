@@ -423,28 +423,21 @@ def delete_schemas(request):
         'status': 'Success',
         'success': True
     }
-
-    if request.method == 'POST':
-
-        try:
-            request_data = json.loads(request.body)
-            if request_data.get('password') == 'DeleteSchemas123!':
-                Schema.objects.all().delete()
-            else:
-                response_data = {
-                    'success': False,
-                    'message': 'Incorrect password'
-                }
-
-        except Exception as error:
+    
+    try:
+        request_data = json.loads(request.body)
+        if request_data.get('password') == 'DeleteSchemas123!':
+            Schema.objects.all().delete()
+        else:
             response_data = {
                 'success': False,
-                'message': str(error)
+                'message': 'Incorrect password'
             }
-    else:
+
+    except Exception as error:
         response_data = {
             'success': False,
-            'message': 'Only POST method allowed'
+            'message': str(error)
         }
 
     return HttpResponse(json.dumps(response_data), content_type='application/json')
