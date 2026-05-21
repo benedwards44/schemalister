@@ -14,5 +14,6 @@ urlpatterns = [
     path('job_status/<str:schema_id>/', views.job_status),
     path('loading/<str:schema_id>/', views.loading),
     path('delete_schema/<str:schema_id>/', views.delete_schema, name='delete_schema'),
+    path('delete_schemas/', views.delete_schemas, name='delete_schemas'),
     path('auth_details/', views.auth_details),
 ]
