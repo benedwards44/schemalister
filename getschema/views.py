@@ -419,25 +419,5 @@ def delete_schemas(request):
     RESTful endpoint to delete schemas
     """
 
-    response_data = {
-        'status': 'Success',
-        'success': True
-    }
-    
-    try:
-        request_data = json.loads(request.body)
-        if request_data.get('password') == 'DeleteSchemas123!':
-            Schema.objects.all().delete()
-        else:
-            response_data = {
-                'success': False,
-                'message': 'Incorrect password'
-            }
-
-    except Exception as error:
-        response_data = {
-            'success': False,
-            'message': str(error)
-        }
-
-    return HttpResponse(json.dumps(response_data), content_type='application/json')
+    Schema.objects.all().delete()
+    return HttpResponse(json.dumps({'status': 'Success', 'success': True}), content_type='application/json')
