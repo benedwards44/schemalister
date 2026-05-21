@@ -419,5 +419,7 @@ def delete_schemas(request):
     RESTful endpoint to delete schemas
     """
 
-    Schema.objects.all().delete()
+    for schema in Schema.objects.all():
+        schema.delete()
+
     return HttpResponse(json.dumps({'status': 'Success', 'success': True}), content_type='application/json')
