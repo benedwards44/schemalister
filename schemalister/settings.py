@@ -39,7 +39,7 @@ ADMINS = (
     ('Ben Edwards', 'ben@edwards.nz'),
 )
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*'] if IS_LOCAL else ['schemalister.cloudtoolkit.co']
 
 # Application definition
 
